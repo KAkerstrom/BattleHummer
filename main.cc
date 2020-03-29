@@ -1,5 +1,5 @@
-#define PROGRAM_TITLE "CPSC 3710 A3 - Kyle Akerstrom"
-#define DISPLAY_INFO  "CPSC 3710 A3 - Kyle Akerstrom"
+#define PROGRAM_TITLE "CPSC 3710 Project"
+#define DISPLAY_INFO  "CPSC 3710 Project"
 
 #include <stdlib.h>  // Useful for the following includes.
 #include <stdio.h>
@@ -150,13 +150,22 @@ BattleHummer test(Point3d(0,0,0));
 
 void Timer(int id)
 {
-    test.Rotate(30);
-    glutTimerFunc(500, &Timer, 0);
+    test.Rotate(0.3f);
+    glutTimerFunc(1, &Timer, 0);
 }
 
 
 int main(int argc, char **argv)
 {
+    printf("\n\n");
+    printf("CPSC 3710 Group Project\n");
+    printf("Group Members:\n");
+    printf("\tKyle Akerstrom\n");
+    printf("\tBrandon Kuss\n");
+    printf("\tMark Wagner\n");
+    printf("\tBrandon Pardy\n");
+    printf("\tDeangelo Kuss\n");
+
     r.SetColor(side_back,   Color(c_yellow, 0.0f));
     r.SetColor(side_front,  Color(c_red,    0.2f));
     r.SetColor(side_left,   Color(c_cyan,   0.4f));
@@ -175,7 +184,7 @@ int main(int argc, char **argv)
     glutIdleFunc(&CallBackRenderScene);
     glutReshapeFunc(&CallBackResizeScene);
     glutMouseFunc(&MouseClick);
-    glutTimerFunc(100, &Timer, 0);
+    glutTimerFunc(1, &Timer, 0);
     glutKeyboardFunc(&KeyPressed); // Only for exiting the program
 
     MyInit(Window_Width, Window_Height);
