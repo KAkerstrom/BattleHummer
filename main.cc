@@ -56,6 +56,8 @@ Ortho p1 (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
 Text text (Point3d(0,0,0), Color(255,0,0), "Test Test Test");
 View view1 (Point2d(Window_Width*0.1,0), Point2d(1, 1), &p1, &c);
 
+Rect3d world (Point3d(0,0,0), Point3d(100,0.25,100), Color(0,0,0,0));
+
 /////////////////////////////////////////////////////////
 // Routine which actually does the drawing             //
 /////////////////////////////////////////////////////////
@@ -174,7 +176,27 @@ int main(int argc, char **argv)
     r.SetColor(side_top,    Color(c_purple, 0.6f));
     r.SetColor(side_bottom, Color(c_teal,   0.4f));
     //view1.AddShape(&text);
-    view3.AddShape(&test);
+    //view3.AddShape(&test);
+   view3.AddShape(&world);
+   //can obviously be abstracted out. Purely to test scale and appearance.
+    for (int x = -50; x < 50; x+=3) {
+        for (int y = -50; y < 50; y+=3){
+            Rect3d* block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75,0.25,1.75), Color(75,75,75,0));
+            view3.AddShape(block);
+            Rect3d* middleLine = new Rect3d(Point3d(x + 1.5, 0.1, y), Point3d(0.1, 0.25, 0.75), Color(255,255,255,0));
+            view3.AddShape(middleLine);
+            //middleLine->Rotate(45);
+            //view3.AddShape(middleLine);
+            Rect3d* middleLine2 = new Rect3d(Point3d(x + 1.5, 0.1, y + 1.5), Point3d(0.1, 0.25, 0.75), Color(255, 255, 255, 0));
+            view3.AddShape(middleLine2);
+            Rect3d* edgeLine = new Rect3d(Point3d(x + 1.0, 0.1, y), Point3d(0.1, 0.25, 100), Color(255,255,255,0));
+            view3.AddShape(edgeLine);
+            Rect3d* edgeLine2 = new Rect3d(Point3d(x + 2.0, 0.1, y), Point3d(0.1, 0.25, 100), Color(255,255,255,0));
+            view3.AddShape(edgeLine2);
+            Rect3d* testBuilding = new Rect3d(Point3d(x + 0.25, 0.5, y - 0.15), Point3d(0.75, 1.5, 0.6), Color(125,125,0,0.4));
+            view3.AddShape(testBuilding);
+        }
+    }
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
