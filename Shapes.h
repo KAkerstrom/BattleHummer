@@ -97,79 +97,59 @@ struct Color
 class Shape
 {
     public:
-        Shape(Point3d _origin, Point3d _offset)
+        Shape(Point3d _center)
         {
             id = "";
-            offset = _offset;
-            rot_origin = Rotation(Point3d(0,1,0), 0);
-            rot_offset = Rotation(Point3d(0,1,0), 0);
+            center = _center;
+            rotation = Rotation(Point3d(0,1,0), 0);
         }
 
-        Shape(std::string _id, Point3d _origin, Point3d _offset)
+        Shape(std::string _id, Point3d _center)
         {
             id = _id;
-            offset = _offset;
+            center = _center;
         }
 
-        void MoveOrigin(Point3d _translation)
+        void Move(Point3d _translation)
         {
-            origin.X += _translation.X;
-            origin.Y += _translation.Y;
-            origin.Z += _translation.Z;
+            center.X += _translation.X;
+            center.Y += _translation.Y;
+            center.Z += _translation.Z;
         }
 
-        void SetOrigin(Point3d _newOrigin)
+        void SetCenter(Point3d _newCenter)
         {
-            origin = _newOrigin;
+            center = _newCenter;
         }
 
-        void MoveOffset(Point3d _translation)
-        {
-            offset.X += _translation.X;
-            offset.Y += _translation.Y;
-            offset.Z += _translation.Z;
-        }
+        void Rotate(float _deg) { rotation.deg += _deg; }
 
-        void SetOffset(Point3d _newOffset)
-        {
-            offset = _newOffset;
-        }
+        void SetRotation (Rotation _rot) { rotation = _rot; }
 
-        void Rotate(float _deg) { rot_origin.deg += _deg; }
-
-        void SetRotOrigin (Rotation _rot) { rot_origin = _rot; }
-        void SetRotOffset (Rotation _rot) { rot_offset = _rot; }
-
-        Rotation GetOriginRot()    { return rot_origin; }
-        Rotation GetOffsetRot()    { return rot_offset; }
-        Point3d GetOrigin()        { return origin;  }
-        Point3d GetOffset()        { return offset;  }
+        Rotation GetRotation()     { return rotation; }
+        Point3d  GetCenter()       { return center;  }
 
         virtual void Draw(bool _drawOnly = false) = 0;
 
     protected:
         void Transform()
         {
-            glTranslatef(origin.X, origin.Y, origin.Z);
-            glRotatef(rot_origin.deg, rot_origin.vec.X, rot_origin.vec.Y, rot_origin.vec.Z);
-            glTranslatef(offset.X, offset.Y, offset.Z);
-            glRotatef(rot_offset.deg, rot_offset.vec.X, rot_offset.vec.Y, rot_offset.vec.Z);
+            glTranslatef(center.X, center.Y, center.Z);
+            glRotatef(rotation.deg, rotation.vec.X, rotation.vec.Y, rotation.vec.Z);
         }
 
       std::string id;
-      Rotation rot_origin;
-      Rotation rot_offset;
+      Rotation rotation;
       Color color;
       Point3d normal;
-      Point3d origin;
-      Point3d offset; // "center" relative to origin
+      Point3d center;
 };
 
 class Rect2d : public Shape
 {
    public:
-        Rect2d(Color _color, Point3d _normal, Point3d _origin, Point3d _offset, std::vector<Point3d> _points)
-            : Shape(_origin, _offset)
+        Rect2d(Color _color, Point3d _normal, Point3d _center, std::vector<Point3d> _points)
+            : Shape(_center)
         {
             normal = _normal;
             color = _color;
@@ -177,7 +157,7 @@ class Rect2d : public Shape
         };
 
         Rect2d(Color _color, Point3d _normal, std::vector<Point3d> _points)
-            : Shape(Point3d(), Point3d())
+            : Shape(Point3d(0,0,0))
         {
             normal = _normal;
             color = _color;
@@ -215,8 +195,8 @@ class Rect2d : public Shape
 class Rect3d : public Shape
 {
     public:
-        Rect3d(Point3d _origin, Point3d _offset, Point3d _size, Color _color)
-            : Shape(_origin, _offset)
+        Rect3d(Point3d _center, Point3d _size, Color _color)
+            : Shape(_center)
         {
             Point3d s(_size.X/2, _size.Y/2, _size.Z/2);
             
@@ -263,8 +243,8 @@ class Rect3d : public Shape
             rects.push_back (Rect2d (_color, Point3d( 0, 0,-1), std::vector<Point3d> (p))); // back
         };
 
-        Rect3d(Point3d _origin, Point3d _offset, std::vector<Rect2d> _rects)
-            : Shape(_origin, _offset)
+        Rect3d(Point3d _center, std::vector<Rect2d> _rects)
+            : Shape(_center)
         {
             rects = _rects;
         };
@@ -301,11 +281,111 @@ class Rect3d : public Shape
         std::vector<Rect2d> rects;
 };
 
+class Sphere : Shape
+{
+   public:
+        Sphere (Point3d _center, float _radius, Color _color) : Shape(_center)
+        {
+            radius = _radius;
+            color = _color;
+        };
+
+        void Draw(bool _drawOnly = false)
+        {
+            glPushMatrix();
+            // rotate after translating
+            glRotatef(rotation.deg, rotation.vec.X, rotation.vec.Y, rotation.vec.Z);
+            glTranslatef(center.X, center.Y, center.Z);
+
+            glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
+            glutSolidSphere(radius, 50, 50);
+
+            glPopMatrix();
+        }
+
+        void SetColor(Color _color) { color = _color; }
+
+        float radius;
+        Color color;
+};
+
+class Pyramid : Shape
+{
+    public:
+        Pyramid(Point3d _center, Point3d _size) : Shape(_center)
+        {
+            size = _size;
+        };
+
+        void Draw(bool _drawOnly = false)
+        {
+            glPushMatrix();
+            glTranslatef(center.X, center.Y, center.Z);
+            glRotatef(rotation.deg, rotation.vec.X, rotation.vec.Y, rotation.vec.Z);
+            //glTranslatef(-center.X, -center.Y, -center.Z);
+
+            float topY = size.Y/2;
+            Point3d front_left ( -size.X/2, -size.Y/2,  -size.Z/2);
+            Point3d front_right(  size.X/2, -size.Y/2,  -size.Z/2);
+            Point3d back_left  ( -size.X/2, -size.Y/2,   size.Z/2);
+            Point3d back_right (  size.X/2, -size.Y/2,   size.Z/2);
+
+            glBegin(GL_TRIANGLES);
+
+            // Back face
+            glNormal3f( 0.0f, 0.0f, -1.0f); // facing back
+            glColor4f(colors[side_back].red, colors[side_back].blue, colors[side_back].green, 1 - colors[side_back].alpha);
+            glVertex3f(0, topY, 0);
+            glVertex3f(back_left.X,  back_left.Y,  back_left.Z);
+            glVertex3f(back_right.X, back_right.Y, back_right.Z);
+
+            // Right face
+            glNormal3f( 1.0f, 0.0f, 0.0f);
+            glColor4f(colors[side_right].red, colors[side_right].blue, colors[side_right].green, 1 - colors[side_right].alpha);
+            glVertex3f(0, topY, 0);
+            glVertex3f(back_right.X, back_right.Y, back_right.Z);
+            glVertex3f(front_right.X, front_right.Y, front_right.Z);
+
+            // Front face
+            glNormal3f( 0.0f, 0.0f, 1.0f);
+            glColor4f(colors[side_front].red, colors[side_front].blue, colors[side_front].green, 1 - colors[side_front].alpha);
+            glVertex3f(0, topY, 0);
+            glVertex3f(front_right.X, front_right.Y, front_right.Z);
+            glVertex3f(front_left.X,  front_left.Y,  front_left.Z);
+
+            // Left Face
+            glNormal3f(-1.0f, 0.0f, 0.0f);
+            glColor4f(colors[side_left].red, colors[side_left].blue, colors[side_left].green, 1 - colors[side_left].alpha);
+            glVertex3f(0, topY, 0);
+            glVertex3f(front_left.X,  front_left.Y,  front_left.Z);
+            glVertex3f(back_left.X,  back_left.Y,  back_left.Z);
+
+            glEnd();
+
+            // Bottom Face
+            glBegin(GL_QUADS);
+            glNormal3f(0.0f, -1.0f, .0f);
+            glColor4f(colors[side_bottom].red, colors[side_bottom].blue, colors[side_bottom].green, 1 - colors[side_bottom].alpha);
+            glVertex3f(front_left.X,  front_left.Y,  front_left.Z);
+            glVertex3f(front_right.X, front_right.Y, front_right.Z);
+            glVertex3f(back_right.X, back_right.Y, back_right.Z);
+            glVertex3f(back_left.X,  back_left.Y,  back_left.Z);
+            glEnd();
+
+            glPopMatrix();
+        }
+
+        void SetColor(int _side, Color _color) { colors[_side] = _color; }
+
+        Point3d size;
+        Color colors[5];
+};
+
 class Text : public Shape
 {
     public:
-        Text(Point3d _origin, Point3d _offset, Color _color, std::string _text)
-            : Shape(_origin, _offset)
+        Text(Point3d _center, Color _color, std::string _text)
+            : Shape(_center)
         {
             color = _color;
             text = _text;
@@ -317,7 +397,7 @@ class Text : public Shape
             glColor4f(color.red, color.green, color.green, 1 - color.alpha);
             sprintf(buf, "%s", text.c_str());
             //glRasterPos2i(2,2);
-            glRasterPos2i(origin.X, origin.Y);
+            glRasterPos2i(center.X, center.Y);
             for(int i = 0;i < text.size(); i++)
                 glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, buf[i]);
         }

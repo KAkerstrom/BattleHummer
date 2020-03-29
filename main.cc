@@ -48,11 +48,11 @@ Point3d up (0, -1, 0);
 
 Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
 Camera c (eye, lookPoint);
-Rect3d r (Point3d(0,0,0), Point3d(0,0,0), Point3d(2,2,2), Color(250, 100, 10, 0));
+Rect3d r (Point3d(0,0,0), Point3d(2,2,2), Color(250, 100, 10, 0));
 View view3 (Point2d(Window_Width*0.1,0), Point2d(1, 1), &p, &c);
 
 Ortho p1 (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
-Text text (Point3d(0,0,0), Point3d(0,0,0), Color(255,0,0), "Test Test Test");
+Text text (Point3d(0,0,0), Color(255,0,0), "Test Test Test");
 View view1 (Point2d(Window_Width*0.1,0), Point2d(1, 1), &p1, &c);
 
 /////////////////////////////////////////////////////////
@@ -153,35 +153,35 @@ void Timer(int id)
 
 int main(int argc, char **argv)
 {
-   r.SetColor(side_back,   Color(c_yellow, 0.0f));
-   r.SetColor(side_front,  Color(c_red,    0.2f));
-   r.SetColor(side_left,   Color(c_cyan,   0.4f));
-   r.SetColor(side_right,  Color(c_maroon, 0.0f));
-   r.SetColor(side_top,    Color(c_purple, 0.6f));
-   r.SetColor(side_bottom, Color(c_teal,   0.4f));
-   view1.AddShape(&text);
-   view3.AddShape(&r);
+    r.SetColor(side_back,   Color(c_yellow, 0.0f));
+    r.SetColor(side_front,  Color(c_red,    0.2f));
+    r.SetColor(side_left,   Color(c_cyan,   0.4f));
+    r.SetColor(side_right,  Color(c_maroon, 0.0f));
+    r.SetColor(side_top,    Color(c_purple, 0.6f));
+    r.SetColor(side_bottom, Color(c_teal,   0.4f));
+    view1.AddShape(&text);
+    view3.AddShape(&r);
 
-   glutInit(&argc, argv);
-   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-   glutInitWindowSize(Window_Width, Window_Height);
-   Window_ID = glutCreateWindow(PROGRAM_TITLE);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitWindowSize(Window_Width, Window_Height);
+    Window_ID = glutCreateWindow(PROGRAM_TITLE);
 
-   glutDisplayFunc(&CallBackRenderScene);
-   glutIdleFunc(&CallBackRenderScene);
-   glutReshapeFunc(&CallBackResizeScene);
-   glutMouseFunc(&MouseClick);
-   glutTimerFunc(100, &Timer, 0);
-   glutKeyboardFunc(&KeyPressed); // Only for exiting the program
+    glutDisplayFunc(&CallBackRenderScene);
+    glutIdleFunc(&CallBackRenderScene);
+    glutReshapeFunc(&CallBackResizeScene);
+    glutMouseFunc(&MouseClick);
+    glutTimerFunc(100, &Timer, 0);
+    glutKeyboardFunc(&KeyPressed); // Only for exiting the program
 
-   MyInit(Window_Width, Window_Height);
+    MyInit(Window_Width, Window_Height);
 
-   /*printf("\n%s\n\n", PROGRAM_TITLE);
-   printf("CPSC 3710 Computer Graphics.\n");
-   printf("Assignment 3 Programming\n");
-   printf("Kyle Akerstrom - 001212544\n");*/
+    /*printf("\n%s\n\n", PROGRAM_TITLE);
+    printf("CPSC 3710 Computer Graphics.\n");
+    printf("Assignment 3 Programming\n");
+    printf("Kyle Akerstrom - 001212544\n");*/
 
-   glutMainLoop(); 
-   return 1; 
+    glutMainLoop(); 
+    return 1; 
 }
 

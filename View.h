@@ -108,8 +108,7 @@ class View
             for (int i = 0; i < shapes.size(); i++)
             {
                 Shape* s = shapes[i];
-                Rect3d* r = (Rect3d*)s;
-                (*r).Draw();
+                s -> Draw();
             }
 
             glPopMatrix();
