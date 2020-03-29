@@ -7,6 +7,7 @@
 #include <vector>
 #include "Shapes.h"
 #include "View.h"
+#include "BattleHummer.h"
 
 #include <GL/gl.h>   // OpenGL itself.
 #include <GL/glu.h>  // GLU support library.
@@ -145,11 +146,14 @@ void MyInit(int Width, int Height)
     CallBackResizeScene(Width,Height);
 }
 
+BattleHummer test(Point3d(0,0,0));
+
 void Timer(int id)
 {
-    r.Rotate(30);
+    test.Rotate(30);
     glutTimerFunc(500, &Timer, 0);
 }
+
 
 int main(int argc, char **argv)
 {
@@ -159,8 +163,8 @@ int main(int argc, char **argv)
     r.SetColor(side_right,  Color(c_maroon, 0.0f));
     r.SetColor(side_top,    Color(c_purple, 0.6f));
     r.SetColor(side_bottom, Color(c_teal,   0.4f));
-    view1.AddShape(&text);
-    view3.AddShape(&r);
+    //view1.AddShape(&text);
+    view3.AddShape(&test);
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);

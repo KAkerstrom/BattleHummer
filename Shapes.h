@@ -4,6 +4,7 @@
 #include <GL/gl.h>   // OpenGL itself.
 #include <GL/glu.h>  // GLU support library.
 #include <GL/glut.h> // GLUT support library.
+#include <math.h>
 #include <vector>
 #include <string>
 
@@ -141,7 +142,6 @@ class Shape
       std::string id;
       Rotation rotation;
       Color color;
-      Point3d normal;
       Point3d center;
 };
 
@@ -172,6 +172,7 @@ class Rect2d : public Shape
         {
             if (!_drawOnly)
             {
+                glPushMatrix();
                 Transform();
                 glBegin(GL_QUADS);
             }
@@ -182,7 +183,7 @@ class Rect2d : public Shape
             if (!_drawOnly)
             {
                 glEnd();
-                //glPopMatrix();
+                glPopMatrix();
             }
         }
 
@@ -190,6 +191,49 @@ class Rect2d : public Shape
       Color color;
       Point3d normal;
       std::vector<Point3d> points;
+};
+
+class Circle : public Shape
+{
+   public:
+        Circle(Point3d _center, float _radius, Color _color)
+            : Shape(_center)
+        {
+            radius = _radius;
+            normal = Point3d(0,1,0);
+            color = _color;
+        };
+
+        void SetColor(Color _color) { color = _color; }
+
+        Color GetColor() { return color; }
+
+        void Draw(bool _drawOnly = false)
+        {
+            if (!_drawOnly)
+            {
+                glPushMatrix();
+                Transform();
+                glBegin(GL_POLYGON);
+            }
+            glNormal3f(normal.X, normal.Y, normal.Z);
+            glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
+            for (float i = 0; i < 50; i++)
+            {
+                float theta = 2.0f * 3.14159f * i / 50.0f;
+                glVertex3f(radius * cosf(theta), radius * sinf(theta), 0);
+            }
+            if (!_drawOnly)
+            {
+                glEnd();
+                glPopMatrix();
+            }
+        }
+
+   protected:
+      Color color;
+      float radius;
+      Point3d normal;
 };
 
 class Rect3d : public Shape
@@ -281,7 +325,7 @@ class Rect3d : public Shape
         std::vector<Rect2d> rects;
 };
 
-class Sphere : Shape
+class Sphere : public Shape
 {
    public:
         Sphere (Point3d _center, float _radius, Color _color) : Shape(_center)
@@ -293,9 +337,7 @@ class Sphere : Shape
         void Draw(bool _drawOnly = false)
         {
             glPushMatrix();
-            // rotate after translating
-            glRotatef(rotation.deg, rotation.vec.X, rotation.vec.Y, rotation.vec.Z);
-            glTranslatef(center.X, center.Y, center.Z);
+            Transform();
 
             glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
             glutSolidSphere(radius, 50, 50);
@@ -309,7 +351,39 @@ class Sphere : Shape
         Color color;
 };
 
-class Pyramid : Shape
+class Cylinder : public Shape
+{
+   public:
+        Cylinder (Point3d _center, float _height, float _radius, Color _color) : Shape(_center)
+        {
+            height = _height;
+            radius = _radius;
+            color = _color;
+        };
+
+        void Draw(bool _drawOnly = false)
+        {
+            glPushMatrix();
+            Transform();
+
+            glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
+            gluCylinder(gluNewQuadric(), radius, radius, height, 50, 50);
+            Circle c1(Point3d(0, 0, 0), radius, Color(50,50,50));
+            Circle c2(Point3d(0, 0, height), radius, Color(50,50,50));
+            c1.Draw();
+            c2.Draw();
+
+            glPopMatrix();
+        }
+
+        void SetColor(Color _color) { color = _color; }
+
+        float height;
+        float radius;
+        Color color;
+};
+
+class Pyramid : public Shape
 {
     public:
         Pyramid(Point3d _center, Point3d _size) : Shape(_center)
@@ -320,9 +394,7 @@ class Pyramid : Shape
         void Draw(bool _drawOnly = false)
         {
             glPushMatrix();
-            glTranslatef(center.X, center.Y, center.Z);
-            glRotatef(rotation.deg, rotation.vec.X, rotation.vec.Y, rotation.vec.Z);
-            //glTranslatef(-center.X, -center.Y, -center.Z);
+            Transform();
 
             float topY = size.Y/2;
             Point3d front_left ( -size.X/2, -size.Y/2,  -size.Z/2);
