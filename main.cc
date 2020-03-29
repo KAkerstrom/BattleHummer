@@ -1,6 +1,19 @@
 #define PROGRAM_TITLE "CPSC 3710 A3 - Kyle Akerstrom"
 #define DISPLAY_INFO  "CPSC 3710 A3 - Kyle Akerstrom"
 
+#ifdef _WIN32
+#include <windows.h>
+#include <stdio.h>
+#include <tchar.h>
+#endif
+
+#ifdef linux
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#endif
+
 #include <stdlib.h>  // Useful for the following includes.
 #include <stdio.h>
 #include <string.h>  // For spring operations.
