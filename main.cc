@@ -45,7 +45,7 @@ static void PrintString(void *font, char *str)
 //Point3d cubeCenter (0,0,0);
 Point3d lookPoint (0, 0, 0);
 Point3d eye (0, 0, 5);
-Point3d up (0, -1, 0);
+Point3d up (0, 1, 0);
 
 Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
 Camera c (eye, lookPoint);
@@ -165,6 +165,7 @@ int main(int argc, char **argv)
     printf("\tMark Wagner\n");
     printf("\tBrandon Pardy\n");
     printf("\tDeangelo Kuss\n");
+    printf("\n");
 
     r.SetColor(side_back,   Color(c_yellow, 0.0f));
     r.SetColor(side_front,  Color(c_red,    0.2f));
@@ -188,11 +189,6 @@ int main(int argc, char **argv)
     glutKeyboardFunc(&KeyPressed); // Only for exiting the program
 
     MyInit(Window_Width, Window_Height);
-
-    /*printf("\n%s\n\n", PROGRAM_TITLE);
-    printf("CPSC 3710 Computer Graphics.\n");
-    printf("Assignment 3 Programming\n");
-    printf("Kyle Akerstrom - 001212544\n");*/
 
     glutMainLoop(); 
     return 1; 

@@ -15,7 +15,7 @@ class Camera
         {
             eye = _eye;
             lookAt = _lookAt;
-            up = Point3d(0, -1, 0);
+            up = Point3d(0, 1, 0);
         }
 
         Camera(Point3d _eye, Point3d _lookAt, Point3d _up)
