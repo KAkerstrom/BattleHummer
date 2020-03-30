@@ -167,7 +167,6 @@ void Timer(int id)
     glutTimerFunc(500, &Timer, 0);
 }
 
-
 int main(int argc, char **argv)
 {
     r.SetColor(side_back,   Color(c_yellow, 0.0f));

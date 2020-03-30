@@ -26,19 +26,17 @@
             "linux": {
               "MIMode": "gdb",
               "miDebuggerPath": "/usr/bin/gdb",
-              "program": "${workspaceFolder}/BattleHummer",
+              "program": "${workspaceFolder}/bin/Debug/BattleHummer",
             },
             "osx": {
               "MIMode": "lldb",
-              "program": "${workspaceFolder}/BattleHummer",
+              "program": "${workspaceFolder}/bin/Debug/BattleHummer",
             },
             "windows": {
               "MIMode": "gdb",
               "miDebuggerPath": "C:\\MinGw\\bin\\gdb.exe",
-              "program": "${workspaceFolder}/BattleHummer.exe",
-            },
-            
-            "postDebugTask": "make clean"
+              "program": "${workspaceFolder}/bin/Debug/BattleHummer.exe",
+            }
         }
     ]
 }
