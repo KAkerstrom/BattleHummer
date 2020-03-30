@@ -53,8 +53,9 @@ Point3d lookPoint (0, 0, 0);
 Point3d eye (0, 0, 5);
 Point3d up (0, 1, 0);
 
-Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
-Camera c (eye, lookPoint);
+//Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
+Perspective p (45.0f, (GLfloat)Window_Width/(GLfloat)Window_Height, 0.1f, 100.0f);
+Camera c (eye, lookPoint, up);
 Rect3d r (Point3d(0,0,0), Point3d(2,2,2), Color(250, 100, 10, 0));
 View view3 (Point2d(Window_Width*0.1,0), Point2d(1, 1), &p, &c);
 
@@ -154,7 +155,7 @@ void MyInit(int Width, int Height)
     CallBackResizeScene(Width,Height);
 }
 
-BattleHummer test(Point3d(0,0,0));
+BattleHummer test(Point3d(0,1,0), 0.3f);
 
 void Timer(int id)
 {
@@ -181,7 +182,7 @@ int main(int argc, char **argv)
     r.SetColor(side_top,    Color(c_purple, 0.6f));
     r.SetColor(side_bottom, Color(c_teal,   0.4f));
     //view1.AddShape(&text);
-    //view3.AddShape(&test);
+    view3.AddShape(&test);
    view3.AddShape(&world);
    //can obviously be abstracted out. Purely to test scale and appearance.
     for (int x = -50; x < 50; x+=3) {
