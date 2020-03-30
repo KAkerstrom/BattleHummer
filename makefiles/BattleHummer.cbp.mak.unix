@@ -15,7 +15,7 @@ INC = -IC:/MinGW/include
 CFLAGS = -Wall
 RESINC = 
 LIBDIR = -LC:/MinGW/lib
-LIB = -lfreeglut -lopengl32 -lglu32 -lwinmm -lgdi32
+LIB = -lX11 -lXi -lXmu -lglut -lGL -lGLU -lm
 LDFLAGS = 
 
 INC_DEBUG = $(INC)

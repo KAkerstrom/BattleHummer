@@ -7,13 +7,6 @@
 #include <tchar.h>
 #endif
 
-#ifdef linux
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#endif
-
 #include <stdlib.h>  // Useful for the following includes.
 #include <stdio.h>
 #include <string.h>  // For spring operations.
