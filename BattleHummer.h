@@ -12,12 +12,23 @@ class BattleHummer : public Object
             shapes.push_back(body);
 
             // Create rocket launchers
-            Rotation rotRL(Point3d(1,0,0), 90);
             Cylinder* leftRL = new Cylinder(Point3d( 1.3f, 0.0f, -1.0f), 0.5f, 0.3f, Color(23, 117, 48));
-            leftRL  -> SetRotation(rotRL);
             shapes.push_back(leftRL);
             Cylinder* rightRL = new Cylinder(Point3d(-1.3f, 0.0f, -1.0f), 0.5f, 0.3f, Color(23, 117, 48));
-            rightRL -> SetRotation(rotRL);
             shapes.push_back(rightRL);
+
+            // Create wheels
+            Cylinder* rf_wheel = new Cylinder(Point3d(-1.1f, -0.7f, -1.0f), 0.3f, 0.3f, Color(23, 117, 48));
+            rf_wheel -> Rotate(90);
+            shapes.push_back(rf_wheel);
+            Cylinder* lf_wheel = new Cylinder(Point3d(0.8f, -0.7f, -1.0f), 0.3f, 0.3f, Color(23, 117, 48));
+            lf_wheel -> Rotate(90);
+            shapes.push_back(lf_wheel);
+            Cylinder* rb_wheel = new Cylinder(Point3d(-1.1f, -0.7f, 1.0f), 0.3f, 0.3f, Color(23, 117, 48));
+            rb_wheel -> Rotate(90);
+            shapes.push_back(rb_wheel);
+            Cylinder* lb_wheel = new Cylinder(Point3d(0.8f, -0.7f, 1.0f), 0.3f, 0.3f, Color(23, 117, 48));
+            lb_wheel -> Rotate(90);
+            shapes.push_back(lb_wheel);
         };
 };
