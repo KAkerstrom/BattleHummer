@@ -3,7 +3,6 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#include <stdio.h>
 #include <tchar.h>
 #endif
 
@@ -50,7 +49,7 @@ static void PrintString(void *font, char *str)
 
 //Point3d cubeCenter (0,0,0);
 Point3d lookPoint (0, 0, 0);
-Point3d eye (0, 0, 5);
+Point3d eye (5, 5, 5);
 Point3d up (0, 1, 0);
 
 //Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
@@ -78,29 +77,66 @@ void CallBackRenderScene(void)
     glutSwapBuffers();
 }
 
+BattleHummer humm(Point3d(0,1,0), 0.3f);
+
 // Only used for exiting the program
 void KeyPressed(unsigned char key, int x, int y)
 {
    switch (key)
    {
+      //case 'a':
+      //   eye.Z += Z_Speed;
+      //   lookPoint.Z += Z_Speed;
+      //   break;
+      //
+      //case 'z':
+      //   eye.Z -= Z_Speed;
+      //   lookPoint.Z -= Z_Speed;
+      //   break;
+      case 'w':
+         humm.throttle = true;
+         humm.brake = false;
+         break;
       case 'a':
-         eye.Z += Z_Speed;
-         lookPoint.Z += Z_Speed;
+         humm.rotL = true;
+         humm.rotR = false;
          break;
-      
-      case 'z':
-         eye.Z -= Z_Speed;
-         lookPoint.Z -= Z_Speed;
+      case 's':
+         humm.brake = true;
+         humm.throttle = false;
          break;
-
+      case 'd':
+         humm.rotR = true;
+         humm.rotL = false;
+         break;
       case 27:
          printf("Escape key pressed. Exiting...\n");
          glutDestroyWindow(Window_ID);
          exit(1);
          break;
-
       default:
          printf("Unrecognized key pressed: %d\n", key);
+   }
+}
+
+void KeyReleased(unsigned char key, int x, int y)
+{
+   switch (key)
+   {
+      case 'w':
+         humm.throttle = false;
+         break;
+      case 'a':
+         humm.rotL = false;
+         break;
+      case 's':
+         humm.brake = false;
+         break;
+      case 'd':
+         humm.rotR = false;
+         break;
+      default:
+         printf("Unrecognized key released: %d\n", key);
    }
 }
 
@@ -159,7 +195,8 @@ BattleHummer test(Point3d(0,1,0), 0.3f);
 
 void Timer(int id)
 {
-    test.Rotate(0.3f);
+    humm.UpdatePosition();
+    //test.Rotate(0.3f);
     glutTimerFunc(1, &Timer, 0);
 }
 
@@ -181,9 +218,10 @@ int main(int argc, char **argv)
     r.SetColor(side_right,  Color(c_maroon, 0.0f));
     r.SetColor(side_top,    Color(c_purple, 0.6f));
     r.SetColor(side_bottom, Color(c_teal,   0.4f));
-    //view1.AddShape(&text);
-    view3.AddShape(&test);
+    view1.AddShape(&text);
+    //view3.AddShape(&test);
    view3.AddShape(&world);
+   view3.AddShape(&humm);
    //can obviously be abstracted out. Purely to test scale and appearance.
     for (int x = -50; x < 50; x+=3) {
         for (int y = -50; y < 50; y+=3){
@@ -215,6 +253,7 @@ int main(int argc, char **argv)
     glutMouseFunc(&MouseClick);
     glutTimerFunc(1, &Timer, 0);
     glutKeyboardFunc(&KeyPressed); // Only for exiting the program
+    glutKeyboardUpFunc(&KeyReleased);
 
     MyInit(Window_Width, Window_Height);
 
