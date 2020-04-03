@@ -72,7 +72,8 @@ View view1(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p1, &c);
 
 Rect3d world(Point3d(0, 0, 0), Point3d(100, 0.25, 100), Color(0, 0, 0, 0));
 
-BattleHummer humm(Point3d(0, 0.5, 0), 0.3f);
+BattleHummer humm(Point3d(-0.25f, 0.5, 1), 0.3f);
+BattleHummer test(Point3d(0, 0.5, 0), 0.3f);
 
 /////////////////////////////////////////////////////////
 // Routine which actually does the drawing             //
@@ -330,8 +331,11 @@ void MouseClick(int button, int state, int x, int y)
 void MyInit(int Width, int Height)
 {
     glEnable(GL_BLEND);
-    glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+    glClearColor(0.6f, 0.6f, 1.0f, 0.0f);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable (GL_CULL_FACE);
+    glCullFace (GL_BACK);
+    glFrontFace (GL_CCW);
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0);
     glDepthFunc(GL_LESS);
@@ -339,12 +343,10 @@ void MyInit(int Width, int Height)
     CallBackResizeScene(Width,Height);
 }
 
-//BattleHummer test(Point3d(0,0.5,0), 0.3f);
-
 void Timer(int id)
 {
    humm.UpdatePosition();
-   //test.Rotate(0.3f);
+   test.Rotate(1);
    glutTimerFunc(1, &Timer, 0);
 }
 
@@ -357,7 +359,7 @@ int main(int argc, char **argv)
     printf("\tBrandon Kuss\n");
     printf("\tMark Wagner\n");
     printf("\tBrandon Pardy\n");
-    printf("\tDerek Kuss\n");
+    printf("\tDevon Kuss\n");
     printf("\n");
 
     r.SetColor(side_back,   Color(c_yellow, 0.0f));
@@ -367,8 +369,8 @@ int main(int argc, char **argv)
     r.SetColor(side_top,    Color(c_purple, 0.6f));
     r.SetColor(side_bottom, Color(c_teal,   0.4f));
     view1.AddShape(&text);
-    //view3.AddShape(&test);
    view3.AddShape(&world);
+   view3.AddShape(&test);
    view3.AddShape(&humm);
    //can obviously be abstracted out. Purely to test scale and appearance.
     for (int x = -50; x < 50; x+=3) {
