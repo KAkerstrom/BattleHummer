@@ -10,8 +10,8 @@ class BattleHummer : public Object
         Point3d * followPoint;
         bool rotR, rotL, throttle, brake;
         double moveSp, rotSp, followDist;
-        double maxSpeed = 1.5;
-        double accel = 0.005;
+        double maxSpeed = 0.28;
+        double accel = 0.05;
     
         BattleHummer(Point3d _center, float _size = 1.0f) : Object(_center)
         {
@@ -52,7 +52,7 @@ class BattleHummer : public Object
             float z = moveSp * cos(rot.deg * M_PI/180);
             float x = moveSp * sin(rot.deg * M_PI/180);
             
-            followDist = 1.5 + (moveSp * 0.9);
+            followDist = 1.5 + (moveSp * 1.6);
 
             followPoint->X = center.X - followDist * cos((-rot.deg - 90) * M_PI/180);
             followPoint->Z = center.Z - followDist * sin((-rot.deg - 90) * M_PI/180);
