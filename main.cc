@@ -36,6 +36,12 @@ float Z_Speed = 0.05f;
 float Z_Max_Speed = 0.005f;
 float Z_Off   = -5.0f;
 
+float EyeX = -0.5f;
+float EyeY = 1.0f;
+float EyeZ = 2.0f;
+float L_X = -0.5f;
+float L_Y = 0.0f;
+float L_Z = 0.0f;
 //////////////////////////////////////////////////////////
 // String rendering routine; leverages on GLUT routine. //
 //////////////////////////////////////////////////////////
@@ -48,8 +54,8 @@ static void PrintString(void *font, char *str)
 }
 
 //Point3d cubeCenter (0,0,0);
-Point3d lookPoint (0, 0, 0);
-Point3d eye (5, 5, 5);
+Point3d lookPoint (L_X, L_Y, L_Z);
+Point3d eye (EyeX, EyeY, EyeZ);
 Point3d up (0, 1, 0);
 
 //Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
@@ -71,13 +77,13 @@ void CallBackRenderScene(void)
 {
     view1.Draw();
     view3.Draw();
-    
+
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
     glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
     glutSwapBuffers();
 }
 
-BattleHummer humm(Point3d(0,1,0), 0.3f);
+BattleHummer humm(Point3d(-0.5,0.4,0), 0.3f);
 
 // Only used for exiting the program
 void KeyPressed(unsigned char key, int x, int y)
@@ -151,7 +157,7 @@ void CallBackResizeScene(int Width, int Height)
 
     view3.SetPosition(Point2d(Width*0.1, 0));
     view3.SetSize(Point2d(Width*0.9, Height*0.9));
-    
+
     view1.SetPosition(Point2d(Width*0.1, Height*0.9));
     view1.SetSize(Point2d(0,0));//Width*0.9, Height*0.1));
 
@@ -168,30 +174,30 @@ void MouseClick(int button, int state, int x, int y)
             view3.camera->eye.X = 5;
             view3.camera->eye.Y = 5;
             break;
-         
+
          default:
             break;
       }
    else if (state == GLUT_UP)
    {
-        view3.camera->eye.X = 0;
-        view3.camera->eye.Y = 0;
+        view3.camera->eye.X = EyeX;
+        view3.camera->eye.Y = EyeY;
    }
 }
 
-void MyInit(int Width, int Height) 
+void MyInit(int Width, int Height)
 {
     glEnable(GL_BLEND);
     glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0);
-    glDepthFunc(GL_LESS); 
+    glDepthFunc(GL_LESS);
     glShadeModel(GL_SMOOTH);
     CallBackResizeScene(Width,Height);
 }
 
-BattleHummer test(Point3d(0,1,0), 0.3f);
+BattleHummer test(Point3d(0,0.5,0), 0.3f);
 
 void Timer(int id)
 {
@@ -209,7 +215,7 @@ int main(int argc, char **argv)
     printf("\tBrandon Kuss\n");
     printf("\tMark Wagner\n");
     printf("\tBrandon Pardy\n");
-    printf("\tDeangelo Kuss\n");
+    printf("\tDerek Kuss\n");
     printf("\n");
 
     r.SetColor(side_back,   Color(c_yellow, 0.0f));
@@ -227,15 +233,15 @@ int main(int argc, char **argv)
         for (int y = -50; y < 50; y+=3){
             Rect3d* block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75,0.25,1.75), Color(75,75,75,0));
             view3.AddShape(block);
-            Rect3d* middleLine = new Rect3d(Point3d(x + 1.5, 0.1, y), Point3d(0.1, 0.25, 0.75), Color(255,255,255,0));
+            Rect3d* middleLine = new Rect3d(Point3d(x + 1.5, 0.1, y), Point3d(0.1, 0.15, 0.75), Color(255,255,255,0));
             view3.AddShape(middleLine);
             //middleLine->Rotate(45);
             //view3.AddShape(middleLine);
-            Rect3d* middleLine2 = new Rect3d(Point3d(x + 1.5, 0.1, y + 1.5), Point3d(0.1, 0.25, 0.75), Color(255, 255, 255, 0));
+            Rect3d* middleLine2 = new Rect3d(Point3d(x + 1.5, 0.1, y + 1.5), Point3d(0.1, 0.15, 0.75), Color(255, 255, 255, 0));
             view3.AddShape(middleLine2);
-            Rect3d* edgeLine = new Rect3d(Point3d(x + 1.0, 0.1, y), Point3d(0.1, 0.25, 100), Color(255,255,255,0));
+            Rect3d* edgeLine = new Rect3d(Point3d(x + 1.0, 0.1, y), Point3d(0.1, 0.15, 25), Color(255,255,255,0));
             view3.AddShape(edgeLine);
-            Rect3d* edgeLine2 = new Rect3d(Point3d(x + 2.0, 0.1, y), Point3d(0.1, 0.25, 100), Color(255,255,255,0));
+            Rect3d* edgeLine2 = new Rect3d(Point3d(x + 2.0, 0.1, y), Point3d(0.1, 0.15, 25), Color(255,255,255,0));
             view3.AddShape(edgeLine2);
             Rect3d* testBuilding = new Rect3d(Point3d(x + 0.25, 0.5, y - 0.15), Point3d(0.75, 1.5, 0.6), Color(125,125,0,0.4));
             view3.AddShape(testBuilding);
@@ -257,7 +263,7 @@ int main(int argc, char **argv)
 
     MyInit(Window_Width, Window_Height);
 
-    glutMainLoop(); 
-    return 1; 
+    glutMainLoop();
+    return 1;
 }
 
