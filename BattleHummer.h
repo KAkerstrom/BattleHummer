@@ -27,23 +27,57 @@ class BattleHummer : public Object
             Point3d bodySize(2 * _size, 1 * _size, 3 * _size);
     
             // Create rocket launchers
-            Cylinder *leftRL = new Cylinder(Point3d(1.3f * _size, 0.0f * _size, -1.0f * _size), 0.5f * _size, 0.3f * _size, Color(23, 117, 48));
+            Color cylinderColor(50, 5, 100);
+            Color endColor(100, 5, 5);
+            Cylinder *leftRL = new Cylinder
+            (
+                Point3d(1.3f * _size, 0.0f * _size, -1.0f * _size),
+                0.5f * _size,
+                0.3f * _size,
+                cylinderColor,
+                endColor
+            );
             shapes.push_back(leftRL);
-            Cylinder *rightRL = new Cylinder(Point3d(-1.3f * _size, 0.0f * _size, -1.0f * _size), 0.5f * _size, 0.3f * _size, Color(23, 117, 48));
+            Cylinder *rightRL = new Cylinder
+            (
+                Point3d(-1.3f * _size, 0.0f * _size, -1.0f * _size),
+                0.5f * _size,
+                0.3f * _size,
+                cylinderColor,
+                endColor
+            );
             shapes.push_back(rightRL);
 
             // Create wheels
             Color wheelColor(0.1f, 0.1f, 0.1f);
-            Cylinder *rf_wheel = new Cylinder(Point3d(-1.1f * _size, -0.7f * _size, -1.0f * _size), 0.3f * _size, 0.3f * _size, wheelColor);
+            Color hubColor(0.2f, 0.2f, 0.2f);
+            float wheelSize = 0.3f * _size;
+            Cylinder *rf_wheel = new Cylinder
+            (
+                Point3d(-1.1f * _size, -0.7f * _size, -1.0f * _size),
+                wheelSize, wheelSize, wheelColor, hubColor
+            );
             rf_wheel->Rotate(90);
             shapes.push_back(rf_wheel);
-            Cylinder *lf_wheel = new Cylinder(Point3d(0.8f * _size, -0.7f * _size, -1.0f * _size), 0.3f * _size, 0.3f * _size, wheelColor);
+            Cylinder *lf_wheel = new Cylinder
+            (
+                Point3d(0.8f * _size, -0.7f * _size, -1.0f * _size),
+                wheelSize, wheelSize, wheelColor, hubColor
+            );
             lf_wheel->Rotate(90);
             shapes.push_back(lf_wheel);
-            Cylinder *rb_wheel = new Cylinder(Point3d(-1.1f * _size, -0.7f * _size, 1.0f * _size), 0.3f * _size, 0.3f * _size, wheelColor);
+            Cylinder *rb_wheel = new Cylinder
+            (
+                Point3d(-1.1f * _size, -0.7f * _size, 1.0f * _size),
+                wheelSize, wheelSize, wheelColor, hubColor
+            );
             rb_wheel->Rotate(90);
             shapes.push_back(rb_wheel);
-            Cylinder *lb_wheel = new Cylinder(Point3d(0.8f * _size, -0.7f * _size, 1.0f * _size), 0.3f * _size, 0.3f * _size, wheelColor);
+            Cylinder *lb_wheel = new Cylinder
+            (
+                Point3d(0.8f * _size, -0.7f * _size, 1.0f * _size),
+                wheelSize, wheelSize, wheelColor, hubColor
+            );
             lb_wheel->Rotate(90);
             shapes.push_back(lb_wheel);
 
@@ -63,6 +97,7 @@ class BattleHummer : public Object
                 Point3d(0, 0.9f*_size, 1*_size),
                 0.8f * _size,
                 0.05f * _size,
+                Color(0,0,0),
                 Color(0,0,0)
             );
             wire -> SetRotation(Rotation(Point3d(1,0,0), 90));

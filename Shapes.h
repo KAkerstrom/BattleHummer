@@ -83,11 +83,11 @@ struct Color
       alpha = a;
    }
 
-   Color(int r, int g, int b) : red((float)r/255), green((float)g/255), blue((float)b/255), alpha(0){}
-   Color(float r, float g, float b) : red(r), green(g), blue(b), alpha(0){}
+   Color(int r, int g, int b) : red((float)r/255), green((float)b/255), blue((float)g/255), alpha(0){}
+   Color(float r, float g, float b) : red(r), green(b), blue(g), alpha(0){}
 
-   Color(int r, int g, int b, int a) : red((float)r/255), green((float)g/255), blue((float)b/255), alpha((float)a/255){}
-   Color(float r, float g, float b, float a) : red(r), green(g), blue(b), alpha(a){}
+   Color(int r, int g, int b, int a) : red((float)r/255), green((float)b/255), blue((float)g/255), alpha((float)a/255){}
+   Color(float r, float g, float b, float a) : red(r), green(b), blue(g), alpha(a){}
 
    float red;
    float green;
@@ -365,11 +365,12 @@ class Sphere : public Shape
 class Cylinder : public Shape
 {
    public:
-        Cylinder (Point3d _center, float _height, float _radius, Color _color) : Shape(_center)
+        Cylinder (Point3d _center, float _height, float _radius, Color _cylinderColor, Color _endColor) : Shape(_center)
         {
             height = _height;
             radius = _radius;
-            color = _color;
+            cylinderColor = _cylinderColor;
+            endColor = _endColor;
         };
 
         void Draw(bool _drawOnly = false)
@@ -377,10 +378,11 @@ class Cylinder : public Shape
             glPushMatrix();
             Transform();
 
-            glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
+            glColor4f(cylinderColor.red, cylinderColor.blue, cylinderColor.green, 1 - cylinderColor.alpha);
             gluCylinder(gluNewQuadric(), radius, radius, height, 50, 50);
-            Circle c1(Point3d(0, 0, 0), radius, Color(50,50,50));
-            Circle c2(Point3d(0, 0, height), radius, Color(50,50,50));
+            Circle c1(Point3d(0, 0, 0), radius, endColor);
+            Circle c2(Point3d(0, 0, height), radius, endColor);
+            c1.Rotate(180);
             c1.Draw();
             c2.Draw();
 
@@ -391,7 +393,8 @@ class Cylinder : public Shape
 
         float height;
         float radius;
-        Color color;
+        Color cylinderColor;
+        Color endColor;
 };
 
 class Pyramid : public Shape
