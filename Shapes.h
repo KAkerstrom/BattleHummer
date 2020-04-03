@@ -102,13 +102,14 @@ class Shape
         {
             id = "";
             center = _center;
-            rotation = Rotation(Point3d(0,1,0), 0);
+            rotation = Rotation(Point3d(0,1,0), 0.0f);
         }
 
         Shape(std::string _id, Point3d _center)
         {
             id = _id;
             center = _center;
+            rotation = Rotation(Point3d(0,1,0), 0);
         }
 
         void Move(Point3d _translation)
@@ -325,6 +326,100 @@ class Rect3d : public Shape
         std::vector<Rect2d> rects;
 };
 
+class Trapezoid : public Shape
+{
+    public:
+        Trapezoid(Point3d _center, Point3d _size, float top_ratio, Color _color)
+            : Shape(_center)
+        {
+            Point3d s (_size.X/2, _size.Y/2, _size.Z/2);
+
+            // top/bottom front/back right/left points
+            // Side-note: I like this way of creating rects better than the rect3d
+            Point3d bfl(-s.X,-s.Y, s.Z);
+            Point3d bfr( s.X,-s.Y, s.Z);
+            Point3d bbl(-s.X,-s.Y,-s.Z);
+            Point3d bbr( s.X,-s.Y,-s.Z);
+            Point3d tfl(-s.X, s.Y, s.Z*top_ratio);
+            Point3d tfr( s.X, s.Y, s.Z*top_ratio);
+            Point3d tbl(-s.X, s.Y,-s.Z*top_ratio);
+            Point3d tbr( s.X, s.Y,-s.Z*top_ratio);
+            
+            std::vector<Point3d> p;
+            p.push_back(bfr);
+            p.push_back(bfl);
+            p.push_back(bbl);
+            p.push_back(bbr);
+            rects.push_back (Rect2d (_color, Point3d( 0,-1, 0), std::vector<Point3d> (p))); // bottom
+
+            p.clear();
+            p.push_back(tfr);
+            p.push_back(tfl);
+            p.push_back(tbl);
+            p.push_back(tbr);
+            rects.push_back (Rect2d (_color, Point3d( 0, 1, 0), std::vector<Point3d> (p))); // top
+
+            p.clear();
+            p.push_back(tfl);
+            p.push_back(tbr);
+            p.push_back(tfr);
+            p.push_back(bfr);
+            rects.push_back (Rect2d (_color, Point3d( 1, 0, 0), std::vector<Point3d> (p))); // right
+
+            p.clear();
+            p.push_back(bbl);
+            p.push_back(bfl);
+            p.push_back(tfl);
+            p.push_back(tbl);
+            rects.push_back (Rect2d (_color, Point3d(-1, 0, 0), std::vector<Point3d> (p))); // left
+
+            p.clear();
+            p.push_back(bfl);
+            p.push_back(bfr);
+            p.push_back(tfr);
+            p.push_back(tfl);
+            rects.push_back (Rect2d (_color, Point3d( 0, 0, 1), std::vector<Point3d> (p))); // front
+
+            p.clear();
+            p.push_back(bbl);
+            p.push_back(bbr);
+            p.push_back(tbr);
+            p.push_back(tbl);
+            rects.push_back (Rect2d (_color, Point3d( 0, 0,-1), std::vector<Point3d> (p))); // back
+        };
+
+        void SetColor(int face, Color _color)
+        {
+            rects[face].SetColor(_color);
+        }
+
+        void SetColor(Color _color)
+        {
+            for (int i = 0; i < 6; i++)
+                rects[i].SetColor(_color);
+        }
+
+        void Draw(bool _drawOnly = false)
+        {
+            if (!_drawOnly)
+            {
+                glPushMatrix();
+                Transform();
+                glBegin(GL_QUADS);
+            }
+            for (int i = 0; i < 6; i++)
+                rects[i].Draw(true);
+            if (!_drawOnly)
+            {
+                glEnd();
+                glPopMatrix();
+            }
+        }
+
+    protected:
+        std::vector<Rect2d> rects;
+};
+
 class Sphere : public Shape
 {
    public:
@@ -451,6 +546,32 @@ class Pyramid : public Shape
 
         Point3d size;
         Color colors[5];
+};
+
+class Teapot : public Shape
+{
+   public:
+        Teapot (Point3d _center, float _size, Color _color) : Shape(_center)
+        {
+            size = _size;
+            color = _color;
+        };
+
+        void Draw(bool _drawOnly = false)
+        {
+            glPushMatrix();
+            Transform();
+
+            glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
+            glutSolidTeapot(size);
+
+            glPopMatrix();
+        }
+
+        void SetColor(Color _color) { color = _color; }
+
+        float size;
+        Color color;
 };
 
 class Text : public Shape
