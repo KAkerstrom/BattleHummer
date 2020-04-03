@@ -171,6 +171,9 @@ void CallBackRenderScene(void)
     }
     c.LookAt();
 
+    gameView.SetPosition(Point2d(0, 0));
+    gameView.SetSize(Point2d(Window_Width, Window_Height));
+    p.aspect = (float)(Window_Width / Window_Height);
     gameView.Draw();
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -226,15 +229,6 @@ void KeyPressed(unsigned char key, int x, int y)
 {
     switch (key)
     {
-    //case 'a':
-    //   eye.Z += Z_Speed;
-    //   lookPoint.Z += Z_Speed;
-    //   break;
-    //
-    //case 'z':
-    //   eye.Z -= Z_Speed;
-    //   lookPoint.Z -= Z_Speed;
-    //   break;
     case 'w':
         humm.throttle = true;
         humm.brake = false;
@@ -291,8 +285,11 @@ void CallBackResizeScene(int Width, int Height)
     if (Height == 0)
         Height = 1;
 
-    gameView.SetPosition(Point2d(0, 0));
-    gameView.SetSize(Point2d(Width, Height));
+    if(Width < Height)
+    {
+        Width = Height;
+        glutReshapeWindow(Width, Height);
+    }
 
     Window_Width = Width;
     Window_Height = Height;
