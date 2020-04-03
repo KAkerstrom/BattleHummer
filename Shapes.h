@@ -240,51 +240,61 @@ class Circle : public Shape
 class Rect3d : public Shape
 {
     public:
-        Rect3d(Point3d _center, Point3d _size, Color _color)
+        Rect3d(Point3d _center, Point3d _size, Color _color, float _top_ratio = 1.0f)
             : Shape(_center)
         {
-            Point3d s(_size.X/2, _size.Y/2, _size.Z/2);
+            Point3d s (_size.X/2, _size.Y/2, _size.Z/2);
+
+            // top/bottom front/back right/left points
+            Point3d bfl(-s.X,-s.Y, s.Z);
+            Point3d bfr( s.X,-s.Y, s.Z);
+            Point3d bbl(-s.X,-s.Y,-s.Z);
+            Point3d bbr( s.X,-s.Y,-s.Z);
+            Point3d tfl(-s.X, s.Y, s.Z*_top_ratio);
+            Point3d tfr( s.X, s.Y, s.Z*_top_ratio);
+            Point3d tbl(-s.X, s.Y,-s.Z*_top_ratio);
+            Point3d tbr( s.X, s.Y,-s.Z*_top_ratio);
             
             std::vector<Point3d> p;
-            p.push_back(Point3d( s.X,-s.Y, s.Z));
-            p.push_back(Point3d(-s.X,-s.Y, s.Z));
-            p.push_back(Point3d(-s.X,-s.Y,-s.Z));
-            p.push_back(Point3d( s.X,-s.Y,-s.Z));
-            rects.push_back (Rect2d (_color, Point3d( 0,-1, 0), std::vector<Point3d> (p))); // top
+            p.push_back(bfr);
+            p.push_back(bbr);
+            p.push_back(bbl);
+            p.push_back(bfl);
+            rects.push_back (Rect2d (_color, Point3d( 0,-1, 0), std::vector<Point3d> (p))); // bottom
 
             p.clear();
-            p.push_back(Point3d( s.X, s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y,-s.Z));
-            p.push_back(Point3d( s.X, s.Y,-s.Z));
-            rects.push_back (Rect2d (_color, Point3d( 0, 1, 0), std::vector<Point3d> (p))); // bottom
+            p.push_back(tfr);
+            p.push_back(tbr);
+            p.push_back(tbl);
+            p.push_back(tfl);
+            rects.push_back (Rect2d (_color, Point3d( 0, 1, 0), std::vector<Point3d> (p))); // top
 
             p.clear();
-            p.push_back(Point3d( s.X,-s.Y,-s.Z));
-            p.push_back(Point3d( s.X, s.Y,-s.Z));
-            p.push_back(Point3d( s.X, s.Y, s.Z));
-            p.push_back(Point3d( s.X,-s.Y, s.Z));
+            p.push_back(tfr);
+            p.push_back(bfr);
+            p.push_back(bbr);
+            p.push_back(tbr);
             rects.push_back (Rect2d (_color, Point3d( 1, 0, 0), std::vector<Point3d> (p))); // right
 
             p.clear();
-            p.push_back(Point3d(-s.X,-s.Y,-s.Z));
-            p.push_back(Point3d(-s.X,-s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y,-s.Z));
+            p.push_back(tfl);
+            p.push_back(tbl);
+            p.push_back(bbl);
+            p.push_back(bfl);
             rects.push_back (Rect2d (_color, Point3d(-1, 0, 0), std::vector<Point3d> (p))); // left
 
             p.clear();
-            p.push_back(Point3d(-s.X,-s.Y, s.Z));
-            p.push_back(Point3d( s.X,-s.Y, s.Z));
-            p.push_back(Point3d( s.X, s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y, s.Z));
+            p.push_back(bfl);
+            p.push_back(bfr);
+            p.push_back(tfr);
+            p.push_back(tfl);
             rects.push_back (Rect2d (_color, Point3d( 0, 0, 1), std::vector<Point3d> (p))); // front
 
             p.clear();
-            p.push_back(Point3d(-s.X,-s.Y,-s.Z));
-            p.push_back(Point3d( s.X,-s.Y,-s.Z));
-            p.push_back(Point3d( s.X, s.Y,-s.Z));
-            p.push_back(Point3d(-s.X, s.Y,-s.Z));
+            p.push_back(bbl);
+            p.push_back(tbl);
+            p.push_back(tbr);
+            p.push_back(bbr);
             rects.push_back (Rect2d (_color, Point3d( 0, 0,-1), std::vector<Point3d> (p))); // back
         };
 
@@ -292,100 +302,6 @@ class Rect3d : public Shape
             : Shape(_center)
         {
             rects = _rects;
-        };
-
-        void SetColor(int face, Color _color)
-        {
-            rects[face].SetColor(_color);
-        }
-
-        void SetColor(Color _color)
-        {
-            for (int i = 0; i < 6; i++)
-                rects[i].SetColor(_color);
-        }
-
-        void Draw(bool _drawOnly = false)
-        {
-            if (!_drawOnly)
-            {
-                glPushMatrix();
-                Transform();
-                glBegin(GL_QUADS);
-            }
-            for (int i = 0; i < 6; i++)
-                rects[i].Draw(true);
-            if (!_drawOnly)
-            {
-                glEnd();
-                glPopMatrix();
-            }
-        }
-
-    protected:
-        std::vector<Rect2d> rects;
-};
-
-class Trapezoid : public Shape
-{
-    public:
-        Trapezoid(Point3d _center, Point3d _size, float top_ratio, Color _color)
-            : Shape(_center)
-        {
-            Point3d s (_size.X/2, _size.Y/2, _size.Z/2);
-
-            // top/bottom front/back right/left points
-            // Side-note: I like this way of creating rects better than the rect3d
-            Point3d bfl(-s.X,-s.Y, s.Z);
-            Point3d bfr( s.X,-s.Y, s.Z);
-            Point3d bbl(-s.X,-s.Y,-s.Z);
-            Point3d bbr( s.X,-s.Y,-s.Z);
-            Point3d tfl(-s.X, s.Y, s.Z*top_ratio);
-            Point3d tfr( s.X, s.Y, s.Z*top_ratio);
-            Point3d tbl(-s.X, s.Y,-s.Z*top_ratio);
-            Point3d tbr( s.X, s.Y,-s.Z*top_ratio);
-            
-            std::vector<Point3d> p;
-            p.push_back(bfr);
-            p.push_back(bfl);
-            p.push_back(bbl);
-            p.push_back(bbr);
-            rects.push_back (Rect2d (_color, Point3d( 0,-1, 0), std::vector<Point3d> (p))); // bottom
-
-            p.clear();
-            p.push_back(tfr);
-            p.push_back(tfl);
-            p.push_back(tbl);
-            p.push_back(tbr);
-            rects.push_back (Rect2d (_color, Point3d( 0, 1, 0), std::vector<Point3d> (p))); // top
-
-            p.clear();
-            p.push_back(tfl);
-            p.push_back(tbr);
-            p.push_back(tfr);
-            p.push_back(bfr);
-            rects.push_back (Rect2d (_color, Point3d( 1, 0, 0), std::vector<Point3d> (p))); // right
-
-            p.clear();
-            p.push_back(bbl);
-            p.push_back(bfl);
-            p.push_back(tfl);
-            p.push_back(tbl);
-            rects.push_back (Rect2d (_color, Point3d(-1, 0, 0), std::vector<Point3d> (p))); // left
-
-            p.clear();
-            p.push_back(bfl);
-            p.push_back(bfr);
-            p.push_back(tfr);
-            p.push_back(tfl);
-            rects.push_back (Rect2d (_color, Point3d( 0, 0, 1), std::vector<Point3d> (p))); // front
-
-            p.clear();
-            p.push_back(bbl);
-            p.push_back(bbr);
-            p.push_back(tbr);
-            p.push_back(tbl);
-            rects.push_back (Rect2d (_color, Point3d( 0, 0,-1), std::vector<Point3d> (p))); // back
         };
 
         void SetColor(int face, Color _color)

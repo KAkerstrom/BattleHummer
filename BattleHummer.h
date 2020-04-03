@@ -46,19 +46,19 @@ class BattleHummer : public Object
             shapes.push_back(lb_wheel);
 
             // Create cab
-            Trapezoid* cab = new Trapezoid
+            Rect3d* cab = new Rect3d
             (
                 Point3d(0.0f, 0.8f*_size, -0.5f*_size),
                 Point3d(bodySize.X*0.95f, 0.8f*bodySize.Y, 0.5*bodySize.Z),
-                0.5f,
-                Color(0.0f, 0.8f*_size, 0.3f*_size)
+                Color(0.0f, 0.8f*_size, 0.3f*_size),
+                0.5f
             );
             shapes.push_back(cab);
 
             // Create antenna
             Cylinder *wire = new Cylinder
             (
-                Point3d(0, 0.8f*_size, 1*_size),
+                Point3d(0, 0.9f*_size, 1*_size),
                 0.8f * _size,
                 0.05f * _size,
                 Color(0,0,0)
