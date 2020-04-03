@@ -57,6 +57,7 @@ static void PrintString(void *font, char *str)
 Point3d lookPoint (L_X, L_Y, L_Z);
 Point3d eye (EyeX, EyeY, EyeZ);
 Point3d up (0, 1, 0);
+int ViewDirection = 0;
 
 //Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
 Perspective p(45.0f, (GLfloat)Window_Width / (GLfloat)Window_Height, 0.1f, 100.0f);
@@ -78,14 +79,33 @@ BattleHummer test(Point3d(0, 0.5, 0), 0.3f);
 /////////////////////////////////////////////////////////
 void CallBackRenderScene(void)
 {
-   Point3d fPoint(humm.followPoint->X, humm.followPoint->Y, humm.followPoint->Z);
+   //Point3d fPoint(humm.followPoint->X, humm.followPoint->Y, humm.followPoint->Z);
    Point3d hPoint = humm.GetCenter();
-
+    Point3d fPoint(hPoint);
+    fPoint.Y = fPoint.Y +0.2;
    //std::cout << "h: " << hPoint.X << ", " << hPoint.Y << ", " << hPoint.Z << std::endl;
    //std::cout << "f: " << fPoint.X << ", " << fPoint.Y << ", " << fPoint.Z << std::endl;
 
    c.SetEye(fPoint);
-   c.SetLookAt(hPoint);
+   hPoint.Y = hPoint.Y +0.2;
+    switch(ViewDirection)
+    {
+    case 0:
+        hPoint.X = hPoint.X - cos((humm.GetRotation().deg-90) * M_PI/180);
+        hPoint.Z = hPoint.Z+ sin((humm.GetRotation().deg-90) * M_PI/180);
+        c.SetLookAt(hPoint);
+        break;
+    case -1:
+        hPoint.X = hPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180);
+        hPoint.Z = hPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180);
+        c.SetLookAt(hPoint);
+        break;
+    case 1:
+        hPoint.X = hPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
+        hPoint.Z = hPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+        c.SetLookAt(hPoint);
+        break;
+    }
    c.LookAt();
 
 
@@ -96,7 +116,21 @@ void CallBackRenderScene(void)
    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
    glutSwapBuffers();
 }
-
+void SpecialKey(int key, int x, int y)
+{
+    switch(key)
+    {
+    case GLUT_KEY_F1:
+    ViewDirection = 0;
+    break;
+   case GLUT_KEY_F2:
+    ViewDirection = 1;
+    break;
+    case GLUT_KEY_F3:
+    ViewDirection = -1;
+    break;
+    }
+}
 // Only used for exiting the program
 void KeyPressed(unsigned char key, int x, int y)
 {
@@ -263,6 +297,7 @@ int main(int argc, char **argv)
     glutInitWindowSize(Window_Width, Window_Height);
     Window_ID = glutCreateWindow(PROGRAM_TITLE);
 
+    glutSpecialFunc(&SpecialKey);
     glutDisplayFunc(&CallBackRenderScene);
     glutIdleFunc(&CallBackRenderScene);
     glutReshapeFunc(&CallBackResizeScene);
