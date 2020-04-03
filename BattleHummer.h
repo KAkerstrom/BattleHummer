@@ -9,14 +9,16 @@ class BattleHummer : public Object
     public:
         Shape* antenna;
         Point3d * followPoint;
+        Point3d * aheadPoint;
         bool rotR, rotL, throttle, brake;
-        double moveSp, rotSp, followDist;
+        double moveSp, rotSp, followDist, fDist = 1.5;
         double maxSpeed = 0.18;
         double accel = 0.03;
     
         BattleHummer(Point3d _center, float _size = 1.0f) : Object(_center)
         {
             followPoint = new Point3d(0, 1.3, 0);
+            aheadPoint = new Point3d(0, 1.3, 0);
             moveSp = 0;
             rotSp = 2.5;
 
@@ -111,7 +113,10 @@ class BattleHummer : public Object
             Rect3d *body = new Rect3d(Point3d(0,0,0), bodySize, Color(117, 50, 60));
             shapes.push_back(body);
         };
-
+        void SetFDist(double Dist)
+        {
+            fDist= Dist;
+        }
         void UpdatePosition()
         {
             antenna -> Rotate(2);
@@ -120,11 +125,12 @@ class BattleHummer : public Object
             float z = moveSp * cos(rot.deg * M_PI/180);
             float x = moveSp * sin(rot.deg * M_PI/180);
 
-            followDist = 1.5 + (moveSp * 1.6);
+            followDist = fDist + (moveSp * 1.6);
 
             followPoint->X = center.X - followDist * cos((-rot.deg - 90) * M_PI/180);
             followPoint->Z = center.Z - followDist * sin((-rot.deg - 90) * M_PI/180);
-
+            aheadPoint->X =center.X + followDist * cos((-rot.deg - 90) * M_PI/180);
+            aheadPoint->Z = center.Z + followDist * sin((-rot.deg - 90) * M_PI/180);
             Move(Point3d(-x, 0, -z));
 
             if(throttle)
