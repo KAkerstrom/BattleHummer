@@ -58,6 +58,7 @@ Point3d lookPoint (L_X, L_Y, L_Z);
 Point3d eye (EyeX, EyeY, EyeZ);
 Point3d up (0, 1, 0);
 int ViewDirection = 0;
+int OutIn = 0;
 
 //Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
 Perspective p(45.0f, (GLfloat)Window_Width / (GLfloat)Window_Height, 0.1f, 100.0f);
@@ -78,8 +79,71 @@ BattleHummer humm(Point3d(0, 0.5, 0), 0.3f);
 /////////////////////////////////////////////////////////
 void CallBackRenderScene(void)
 {
-   //Point3d fPoint(humm.followPoint->X, humm.followPoint->Y, humm.followPoint->Z);
-   Point3d hPoint = humm.GetCenter();
+    Point3d hPoint = humm.GetCenter();
+
+if (OutIn >0)
+{
+   Point3d fPoint(humm.followPoint->X, humm.followPoint->Y, humm.followPoint->Z);
+   Point3d aPoint(humm.aheadPoint->X, humm.aheadPoint->Y, humm.aheadPoint->Z);
+switch(OutIn)
+{
+case 1:
+    humm.SetFDist(1.5);
+    fPoint.X = fPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
+    fPoint.Z = fPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+    fPoint.Y = 2;
+    break;
+case 2:
+    humm.SetFDist(1.5);
+    fPoint.X = aPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
+    fPoint.Z = aPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+    fPoint.Y = 2;
+    break;
+case 3:
+    humm.SetFDist(1.5);
+    fPoint.X = (aPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180));
+    fPoint.Z = (aPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180));
+    fPoint.Y = 2;
+    break;
+case 4:
+    humm.SetFDist(1.5);
+    fPoint.X = (fPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180));
+    fPoint.Z = (fPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180));
+    fPoint.Y = 2;
+    break;
+case 5:
+    humm.SetFDist(3.5);
+    fPoint.X = fPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
+    fPoint.Z = fPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+    fPoint.Y = 4;
+    break;
+case 6:
+    humm.SetFDist(3.5);
+    fPoint.X = aPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
+    fPoint.Z = aPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+    fPoint.Y = 4;
+    break;
+case 7:
+    humm.SetFDist(3.5);
+    fPoint.X = (aPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180));
+    fPoint.Z = (aPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180));
+    fPoint.Y = 4;
+    break;
+case 8:
+    humm.SetFDist(3.5);
+    fPoint.X = (fPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180));
+    fPoint.Z = (fPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180));
+    fPoint.Y = 4;
+    break;
+}
+
+
+c.SetEye(fPoint);
+c.SetLookAt(hPoint);
+
+
+}
+else{
     Point3d fPoint(hPoint);
     fPoint.Y = fPoint.Y +0.2;
    //std::cout << "h: " << hPoint.X << ", " << hPoint.Y << ", " << hPoint.Z << std::endl;
@@ -104,7 +168,11 @@ void CallBackRenderScene(void)
         hPoint.Z = hPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
         c.SetLookAt(hPoint);
         break;
+    default:
+        hPoint = humm.GetCenter();
+        break;
     }
+}
    c.LookAt();
 
 
@@ -127,6 +195,35 @@ void SpecialKey(int key, int x, int y)
     break;
     case GLUT_KEY_F3:
     ViewDirection = -1;
+    break;
+    case GLUT_KEY_F4:
+        OutIn =0;
+    ViewDirection = 0;
+    break;
+   case GLUT_KEY_F5:
+       OutIn =1;
+    ViewDirection = 1;
+    break;
+case GLUT_KEY_F6:
+        OutIn =2;
+        break;
+    case GLUT_KEY_F7:
+        OutIn =3;
+    break;
+   case GLUT_KEY_F8:
+       OutIn =4;
+    break;
+    case GLUT_KEY_F9:
+        OutIn =5;
+    break;
+    case GLUT_KEY_F10:
+        OutIn =6;
+    break;
+   case GLUT_KEY_F11:
+       OutIn =7;
+    break;
+    case GLUT_KEY_F12:
+        OutIn =8;
     break;
     }
 }
