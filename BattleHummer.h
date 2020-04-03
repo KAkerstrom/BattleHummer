@@ -94,7 +94,7 @@ class BattleHummer : public Object
             // Create antenna
             Cylinder *wire = new Cylinder
             (
-                Point3d(0, 0.9f*_size, 1*_size),
+                Point3d(0, 0.85f*_size, 1*_size),
                 0.8f * _size,
                 0.05f * _size,
                 Color(0,0,0),

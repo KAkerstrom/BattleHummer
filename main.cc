@@ -64,12 +64,9 @@ int OutIn = 0;
 Perspective p(45.0f, (GLfloat)Window_Width / (GLfloat)Window_Height, 0.1f, 100.0f);
 Camera c(eye, lookPoint, up);
 Rect3d r(Point3d(0, 0, 0), Point3d(2, 2, 2), Color(250, 100, 10, 0));
-View view3(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p, &c);
+View gameView(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p, &c);
 
-Ortho p1(Point3d(0, 0, 0), Point3d(Window_Width / 50, Window_Height / 50, 500));
-Text text(Point3d(0, 0, 0), Color(255, 0, 0), "Test Test Test");
-View view1(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p1, &c);
-
+//Ortho p1(Point3d(0, 0, 0), Point3d(Window_Width / 50, Window_Height / 50, 500));
 Rect3d world(Point3d(0, 0, 0), Point3d(100, 0.25, 100), Color(0, 0, 0, 0));
 
 BattleHummer humm(Point3d(-0.25f, 0.5, 1), 0.3f);
@@ -177,8 +174,7 @@ else{
    c.LookAt();
 
 
-   view1.Draw();
-   view3.Draw();
+   gameView.Draw();
 
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -298,11 +294,8 @@ void CallBackResizeScene(int Width, int Height)
    if (Height == 0)
       Height = 1;
 
-   view3.SetPosition(Point2d(Width * 0.1, 0));
-   view3.SetSize(Point2d(Width * 0.9, Height * 0.9));
-
-   view1.SetPosition(Point2d(Width * 0.1, Height * 0.9));
-   view1.SetSize(Point2d(0, 0)); //Width*0.9, Height*0.1));
+   gameView.SetPosition(Point2d(0, 0));
+   gameView.SetSize(Point2d(Width, Height));
 
    Window_Width = Width;
    Window_Height = Height;
@@ -314,8 +307,8 @@ void MouseClick(int button, int state, int x, int y)
       switch (button)
       {
       case GLUT_RIGHT_BUTTON:
-         view3.camera->eye.X = 5;
-         view3.camera->eye.Y = 5;
+         gameView.camera->eye.X = 5;
+         gameView.camera->eye.Y = 5;
          break;
 
       default:
@@ -323,8 +316,8 @@ void MouseClick(int button, int state, int x, int y)
       }
    else if (state == GLUT_UP)
    {
-      view3.camera->eye.X = 0;
-      view3.camera->eye.Y = 0;
+      gameView.camera->eye.X = 0;
+      gameView.camera->eye.Y = 0;
    }
 }
 
@@ -368,27 +361,26 @@ int main(int argc, char **argv)
     r.SetColor(side_right,  Color(c_maroon, 0.0f));
     r.SetColor(side_top,    Color(c_purple, 0.6f));
     r.SetColor(side_bottom, Color(c_teal,   0.4f));
-    view1.AddShape(&text);
-   view3.AddShape(&world);
-   view3.AddShape(&test);
-   view3.AddShape(&humm);
+   gameView.AddShape(&world);
+   gameView.AddShape(&test);
+   gameView.AddShape(&humm);
    //can obviously be abstracted out. Purely to test scale and appearance.
     for (int x = -50; x < 50; x+=3) {
         for (int y = -50; y < 50; y+=3){
             Rect3d* block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75,0.25,1.75), Color(75,75,75,0));
-            view3.AddShape(block);
+            gameView.AddShape(block);
             Rect3d* middleLine = new Rect3d(Point3d(x + 1.5, 0.1, y), Point3d(0.1, 0.15, 0.75), Color(255,255,255,0));
-            view3.AddShape(middleLine);
+            gameView.AddShape(middleLine);
             //middleLine->Rotate(45);
-            //view3.AddShape(middleLine);
+            //gameView.AddShape(middleLine);
             Rect3d* middleLine2 = new Rect3d(Point3d(x + 1.5, 0.1, y + 1.5), Point3d(0.1, 0.15, 0.75), Color(255, 255, 255, 0));
-            view3.AddShape(middleLine2);
+            gameView.AddShape(middleLine2);
             Rect3d* edgeLine = new Rect3d(Point3d(x + 1.0, 0.1, y), Point3d(0.1, 0.15, 25), Color(255,255,255,0));
-            view3.AddShape(edgeLine);
+            gameView.AddShape(edgeLine);
             Rect3d* edgeLine2 = new Rect3d(Point3d(x + 2.0, 0.1, y), Point3d(0.1, 0.15, 25), Color(255,255,255,0));
-            view3.AddShape(edgeLine2);
+            gameView.AddShape(edgeLine2);
             Rect3d* testBuilding = new Rect3d(Point3d(x + 0.25, 0.5, y - 0.15), Point3d(0.75, 1.5, 0.6), Color(125,125,0,0.4));
-            view3.AddShape(testBuilding);
+            gameView.AddShape(testBuilding);
         }
     }
 
