@@ -19,8 +19,8 @@ class Ortho : public Projection
             right   = _center.X + s.X;
             bottom  = _center.Y - s.Y;
             top     = _center.Y + s.Y;
-            Near    = _center.Z - s.Z;
-            Far     = _center.Z + s.Z;
+            near    = _center.Z - s.Z;
+            far     = _center.Z + s.Z;
         };
 
         Ortho (float _left, float _right, float _bottom, float _top, float _near, float _far)
@@ -29,16 +29,16 @@ class Ortho : public Projection
             right = _right;
             bottom = _bottom;
             top = _top;
-            Near = _near;
-            Far = _far;
+            near = _near;
+            far = _far;
         };
 
         void Project()
         {
-            glOrtho (left, right, bottom, top, Near, Far);
+            glOrtho (left, right, bottom, top, near, far);
         }
 
-        float left, right, bottom, top, Near, Far;
+        float left, right, bottom, top, near, far;
 };
 
 class Perspective : public Projection
@@ -48,16 +48,16 @@ class Perspective : public Projection
         {
             fovy = _fovy;
             aspect = _aspect;
-            Near = _near;
-            Far = _far;
+            near = _near;
+            far = _far;
         };
 
         void Project()
         {
-            gluPerspective (fovy, aspect, Near, Far);
+            gluPerspective (fovy, aspect, near, far);
         }
 
-        float fovy, aspect, Near, Far;
+        float fovy, aspect, near, far;
 };
 
 # endif

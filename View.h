@@ -104,6 +104,7 @@ class View
             glLoadIdentity();
             if (camera != 0)
                 camera->LookAt();
+            //printf("%d\n", s);
             for (int i = 0; i < shapes.size(); i++)
             {
                 Shape* s = shapes[i];
