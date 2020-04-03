@@ -67,10 +67,10 @@ Rect3d r(Point3d(0, 0, 0), Point3d(2, 2, 2), Color(250, 100, 10, 0));
 View gameView(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p, &c);
 
 //Ortho p1(Point3d(0, 0, 0), Point3d(Window_Width / 50, Window_Height / 50, 500));
-Rect3d world(Point3d(0, 0, 0), Point3d(100, 0.25, 100), Color(0, 0, 0, 0));
+Rect3d world(Point3d(0, 0, 0), Point3d(200, 0.25, 200), Color(0, 0, 0, 0));
 
 BattleHummer humm(Point3d(-0.25f, 0.5, 1), 0.3f);
-BattleHummer test(Point3d(0, 0.5, 0), 0.3f);
+BattleHummer test(Point3d(0, 0.5f, -2.0f), 0.3f);
 
 /////////////////////////////////////////////////////////
 // Routine which actually does the drawing             //
@@ -355,15 +355,11 @@ int main(int argc, char **argv)
     printf("\tDevon Kuss\n");
     printf("\n");
 
-    r.SetColor(side_back,   Color(c_yellow, 0.0f));
-    r.SetColor(side_front,  Color(c_red,    0.2f));
-    r.SetColor(side_left,   Color(c_cyan,   0.4f));
-    r.SetColor(side_right,  Color(c_maroon, 0.0f));
-    r.SetColor(side_top,    Color(c_purple, 0.6f));
-    r.SetColor(side_bottom, Color(c_teal,   0.4f));
+    test.Rotate(90);
    gameView.AddShape(&world);
    gameView.AddShape(&test);
    gameView.AddShape(&humm);
+   
    int worldScaling = 2;
     for (int x = -100; x < 100; x+=6) {
         for (int y = -100; y < 100; y+=6){

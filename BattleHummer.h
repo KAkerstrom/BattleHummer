@@ -11,7 +11,8 @@ class BattleHummer : public Object
         Point3d * followPoint;
         Point3d * aheadPoint;
         bool rotR, rotL, throttle, brake;
-        double moveSp, rotSp, followDist, fDist = 1.5;
+        double moveSp, followDist, fDist = 1.5;
+        double rotSp = 2.0f;
         double maxSpeed = 0.18;
         double accel = 0.03;
     
@@ -24,25 +25,25 @@ class BattleHummer : public Object
 
             rotR = rotL = throttle = brake = false;
     
-            Point3d bodySize(2 * _size, 1 * _size, 3 * _size);
+            Point3d bodySize(1.5 * _size, 1 * _size, 3 * _size);
     
             // Create rocket launchers
-            Color cylinderColor(50, 5, 100);
-            Color endColor(100, 5, 5);
+            Color endColor(200, 5, 5);
+            Color cylinderColor(100, 5, 5);
             Cylinder *leftRL = new Cylinder
             (
-                Point3d(1.3f * _size, 0.0f * _size, -1.0f * _size),
-                0.5f * _size,
-                0.3f * _size,
+                Point3d(1.0f * _size, 0.0f * _size, -1.0f * _size),
+                0.55f * _size,
+                0.2f * _size,
                 cylinderColor,
                 endColor
             );
             shapes.push_back(leftRL);
             Cylinder *rightRL = new Cylinder
             (
-                Point3d(-1.3f * _size, 0.0f * _size, -1.0f * _size),
-                0.5f * _size,
-                0.3f * _size,
+                Point3d(-1.0f * _size, 0.0f * _size, -1.0f * _size),
+                0.55f * _size,
+                0.2f * _size,
                 cylinderColor,
                 endColor
             );
@@ -85,11 +86,29 @@ class BattleHummer : public Object
             Rect3d* cab = new Rect3d
             (
                 Point3d(0.0f, 0.8f*_size, -0.5f*_size),
-                Point3d(bodySize.X*0.95f, 0.8f*bodySize.Y, 0.5*bodySize.Z),
+                Point3d(bodySize.X*0.9f, 0.8f*bodySize.Y, 0.5*bodySize.Z),
                 Color(0.0f, 0.8f*_size, 0.3f*_size),
                 0.5f
             );
             shapes.push_back(cab);
+
+            float fw_btmZ = -1.155f*_size;
+            float fw_topZ = -0.95f*_size;
+            float fw_topY = 1.1f*_size;
+            float fw_btmY = 0.6f*_size;
+            float fw_X = 0.5f*_size;
+            std::vector<Point3d> p;
+            p.push_back(Point3d(-fw_X,fw_topY,fw_topZ)); // top-left (from driver's perspective)
+            p.push_back(Point3d( fw_X,fw_topY,fw_topZ)); // top-right
+            p.push_back(Point3d( fw_X,fw_btmY,fw_btmZ)); // bottom-right
+            p.push_back(Point3d(-fw_X,fw_btmY,fw_btmZ)); // bottom-left
+            Rect2d* frontWindow = new Rect2d
+            (
+                Color(c_cyan, 0),
+                Point3d(0,0,1),
+                p
+            );
+            shapes.push_back(frontWindow);
 
             // Create antenna
             Cylinder *wire = new Cylinder
