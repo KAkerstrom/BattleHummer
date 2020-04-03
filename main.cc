@@ -36,6 +36,12 @@ float Z_Speed = 0.05f;
 float Z_Max_Speed = 0.005f;
 float Z_Off = -5.0f;
 
+float EyeX = -0.5f;
+float EyeY = 1.0f;
+float EyeZ = 2.0f;
+float L_X = -0.5f;
+float L_Y = 0.0f;
+float L_Z = 0.0f;
 //////////////////////////////////////////////////////////
 // String rendering routine; leverages on GLUT routine. //
 //////////////////////////////////////////////////////////
@@ -47,9 +53,10 @@ static void PrintString(void *font, char *str)
       glutBitmapCharacter(font, *str++);
 }
 
-Point3d lookPoint(0, 0, 0);
-Point3d eye(5, 5, 5);
-Point3d up(0, 1, 0);
+//Point3d cubeCenter (0,0,0);
+Point3d lookPoint (L_X, L_Y, L_Z);
+Point3d eye (EyeX, EyeY, EyeZ);
+Point3d up (0, 1, 0);
 
 //Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
 Perspective p(45.0f, (GLfloat)Window_Width / (GLfloat)Window_Height, 0.1f, 100.0f);
@@ -63,7 +70,7 @@ View view1(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p1, &c);
 
 Rect3d world(Point3d(0, 0, 0), Point3d(100, 0.25, 100), Color(0, 0, 0, 0));
 
-BattleHummer humm(Point3d(0, 0.5, 0), 0.3f);
+BattleHummer humm(Point3d(1, 0.5, 1), 0.3f);
 
 /////////////////////////////////////////////////////////
 // Routine which actually does the drawing             //
@@ -191,82 +198,82 @@ void MouseClick(int button, int state, int x, int y)
 
 void MyInit(int Width, int Height)
 {
-   glEnable(GL_BLEND);
-   glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   glEnable(GL_DEPTH_TEST);
-   glClearDepth(1.0);
-   glDepthFunc(GL_LESS);
-   glShadeModel(GL_SMOOTH);
-   CallBackResizeScene(Width, Height);
+    glEnable(GL_BLEND);
+    glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_DEPTH_TEST);
+    glClearDepth(1.0);
+    glDepthFunc(GL_LESS);
+    glShadeModel(GL_SMOOTH);
+    CallBackResizeScene(Width,Height);
 }
+
+BattleHummer test(Point3d(0,0.5,0), 0.3f);
 
 void Timer(int id)
 {
    humm.UpdatePosition();
-   //test.Rotate(0.3f);
+   test.Rotate(0.3f);
    glutTimerFunc(1, &Timer, 0);
 }
 
 int main(int argc, char **argv)
 {
-   printf("\n\n");
-   printf("CPSC 3710 Group Project\n");
-   printf("Group Members:\n");
-   printf("\tKyle Akerstrom\n");
-   printf("\tBrandon Kuss\n");
-   printf("\tMark Wagner\n");
-   printf("\tBrandon Pardy\n");
-   printf("\tDeangelo Kuss\n");
-   printf("\n");
+    printf("\n\n");
+    printf("CPSC 3710 Group Project\n");
+    printf("Group Members:\n");
+    printf("\tKyle Akerstrom\n");
+    printf("\tBrandon Kuss\n");
+    printf("\tMark Wagner\n");
+    printf("\tBrandon Pardy\n");
+    printf("\tDerek Kuss\n");
+    printf("\n");
 
-   r.SetColor(side_back, Color(c_yellow, 0.0f));
-   r.SetColor(side_front, Color(c_red, 0.2f));
-   r.SetColor(side_left, Color(c_cyan, 0.4f));
-   r.SetColor(side_right, Color(c_maroon, 0.0f));
-   r.SetColor(side_top, Color(c_purple, 0.6f));
-   r.SetColor(side_bottom, Color(c_teal, 0.4f));
-   view1.AddShape(&text);
-   //view3.AddShape(&test);
+    r.SetColor(side_back,   Color(c_yellow, 0.0f));
+    r.SetColor(side_front,  Color(c_red,    0.2f));
+    r.SetColor(side_left,   Color(c_cyan,   0.4f));
+    r.SetColor(side_right,  Color(c_maroon, 0.0f));
+    r.SetColor(side_top,    Color(c_purple, 0.6f));
+    r.SetColor(side_bottom, Color(c_teal,   0.4f));
+    view1.AddShape(&text);
+    view3.AddShape(&test);
    view3.AddShape(&world);
    view3.AddShape(&humm);
    //can obviously be abstracted out. Purely to test scale and appearance.
-   for (int x = -50; x < 50; x += 3)
-   {
-      for (int y = -50; y < 50; y += 3)
-      {
-         Rect3d *block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75, 0.25, 1.75), Color(75, 75, 75, 0));
-         view3.AddShape(block);
-         Rect3d *middleLine = new Rect3d(Point3d(x + 1.5, 0.1, y), Point3d(0.1, 0.25, 0.75), Color(255, 255, 255, 0));
-         view3.AddShape(middleLine);
-         //middleLine->Rotate(45);
-         //view3.AddShape(middleLine);
-         Rect3d *middleLine2 = new Rect3d(Point3d(x + 1.5, 0.1, y + 1.5), Point3d(0.1, 0.25, 0.75), Color(255, 255, 255, 0));
-         view3.AddShape(middleLine2);
-         Rect3d *edgeLine = new Rect3d(Point3d(x + 1.0, 0.1, y), Point3d(0.1, 0.25, 100), Color(255, 255, 255, 0));
-         view3.AddShape(edgeLine);
-         Rect3d *edgeLine2 = new Rect3d(Point3d(x + 2.0, 0.1, y), Point3d(0.1, 0.25, 100), Color(255, 255, 255, 0));
-         view3.AddShape(edgeLine2);
-         Rect3d *testBuilding = new Rect3d(Point3d(x + 0.25, 0.5, y - 0.15), Point3d(0.75, 1.5, 0.6), Color(125, 125, 0, 0.4));
-         view3.AddShape(testBuilding);
-      }
-   }
+    for (int x = -50; x < 50; x+=3) {
+        for (int y = -50; y < 50; y+=3){
+            Rect3d* block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75,0.25,1.75), Color(75,75,75,0));
+            view3.AddShape(block);
+            Rect3d* middleLine = new Rect3d(Point3d(x + 1.5, 0.1, y), Point3d(0.1, 0.15, 0.75), Color(255,255,255,0));
+            view3.AddShape(middleLine);
+            //middleLine->Rotate(45);
+            //view3.AddShape(middleLine);
+            Rect3d* middleLine2 = new Rect3d(Point3d(x + 1.5, 0.1, y + 1.5), Point3d(0.1, 0.15, 0.75), Color(255, 255, 255, 0));
+            view3.AddShape(middleLine2);
+            Rect3d* edgeLine = new Rect3d(Point3d(x + 1.0, 0.1, y), Point3d(0.1, 0.15, 25), Color(255,255,255,0));
+            view3.AddShape(edgeLine);
+            Rect3d* edgeLine2 = new Rect3d(Point3d(x + 2.0, 0.1, y), Point3d(0.1, 0.15, 25), Color(255,255,255,0));
+            view3.AddShape(edgeLine2);
+            Rect3d* testBuilding = new Rect3d(Point3d(x + 0.25, 0.5, y - 0.15), Point3d(0.75, 1.5, 0.6), Color(125,125,0,0.4));
+            view3.AddShape(testBuilding);
+        }
+    }
 
-   glutInit(&argc, argv);
-   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-   glutInitWindowSize(Window_Width, Window_Height);
-   Window_ID = glutCreateWindow(PROGRAM_TITLE);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitWindowSize(Window_Width, Window_Height);
+    Window_ID = glutCreateWindow(PROGRAM_TITLE);
 
-   glutDisplayFunc(&CallBackRenderScene);
-   glutIdleFunc(&CallBackRenderScene);
-   glutReshapeFunc(&CallBackResizeScene);
-   glutMouseFunc(&MouseClick);
-   glutTimerFunc(1, &Timer, 0);
-   glutKeyboardFunc(&KeyPressed); // Only for exiting the program
-   glutKeyboardUpFunc(&KeyReleased);
+    glutDisplayFunc(&CallBackRenderScene);
+    glutIdleFunc(&CallBackRenderScene);
+    glutReshapeFunc(&CallBackResizeScene);
+    glutMouseFunc(&MouseClick);
+    glutTimerFunc(1, &Timer, 0);
+    glutKeyboardFunc(&KeyPressed); // Only for exiting the program
+    glutKeyboardUpFunc(&KeyReleased);
 
-   MyInit(Window_Width, Window_Height);
+    MyInit(Window_Width, Window_Height);
 
-   glutMainLoop();
-   return 1;
+    glutMainLoop();
+    return 1;
 }
