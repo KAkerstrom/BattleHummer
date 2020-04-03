@@ -7,13 +7,18 @@
 class BattleHummer : public Object
 {
     public:
+        Point3d * followPoint;
         bool rotR, rotL, throttle, brake;
-        double moveSp, rotSp;
+        double moveSp, rotSp, followDist;
+        double maxSpeed = 1.5;
+        double accel = 0.005;
     
         BattleHummer(Point3d _center, float _size = 1.0f) : Object(_center)
         {
+            followPoint = new Point3d(0, 1.3, 0);
             moveSp = 0;
             rotSp = 2.5;
+            
             rotR = rotL = throttle = brake = false;
     
             // Create body
@@ -44,21 +49,33 @@ class BattleHummer : public Object
         void UpdatePosition()
         {
             Rotation rot = GetRotation();
-            float z = moveSp * cos(rot.deg * M_PI/180 );
-            float x = moveSp * sin(rot.deg * M_PI/180 );
+            float z = moveSp * cos(rot.deg * M_PI/180);
+            float x = moveSp * sin(rot.deg * M_PI/180);
+            
+            followDist = 1.5 + (moveSp * 0.9);
+
+            followPoint->X = center.X - followDist * cos((-rot.deg - 90) * M_PI/180);
+            followPoint->Z = center.Z - followDist * sin((-rot.deg - 90) * M_PI/180);
+
             Move(Point3d(-x, 0, -z));
 
             if(throttle)
             {
-                if(moveSp < 1)
-                    moveSp += 0.001;
+                if(moveSp < maxSpeed)
+                    moveSp += accel;
             }
             else
             {
                 if(moveSp > 0)
-                    moveSp -= 0.001;
+                    moveSp -= accel;
             }
             
+            if(brake)
+            {
+                if(moveSp > 0)
+                    moveSp -= accel * 2;
+            }
+
             if(rotL)
             {
                 Rotate(rotSp);
@@ -67,5 +84,17 @@ class BattleHummer : public Object
             {
                 Rotate(-rotSp);
             }
+
+            if(moveSp <= 0)
+                    moveSp = 0;
+
+            if(moveSp >= maxSpeed)
+                    moveSp = maxSpeed;
+
         };
+
+        ~BattleHummer()
+        {
+            delete followPoint;
+        }
 };
