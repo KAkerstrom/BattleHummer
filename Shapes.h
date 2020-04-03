@@ -83,11 +83,11 @@ struct Color
       alpha = a;
    }
 
-   Color(int r, int g, int b) : red((float)r/255), green((float)g/255), blue((float)b/255), alpha(0){}
-   Color(float r, float g, float b) : red(r), green(g), blue(b), alpha(0){}
+   Color(int r, int g, int b) : red((float)r/255), green((float)b/255), blue((float)g/255), alpha(0){}
+   Color(float r, float g, float b) : red(r), green(b), blue(g), alpha(0){}
 
-   Color(int r, int g, int b, int a) : red((float)r/255), green((float)g/255), blue((float)b/255), alpha((float)a/255){}
-   Color(float r, float g, float b, float a) : red(r), green(g), blue(b), alpha(a){}
+   Color(int r, int g, int b, int a) : red((float)r/255), green((float)b/255), blue((float)g/255), alpha((float)a/255){}
+   Color(float r, float g, float b, float a) : red(r), green(b), blue(g), alpha(a){}
 
    float red;
    float green;
@@ -102,13 +102,14 @@ class Shape
         {
             id = "";
             center = _center;
-            rotation = Rotation(Point3d(0,1,0), 0);
+            rotation = Rotation(Point3d(0,1,0), 0.0f);
         }
 
         Shape(std::string _id, Point3d _center)
         {
             id = _id;
             center = _center;
+            rotation = Rotation(Point3d(0,1,0), 0);
         }
 
         void Move(Point3d _translation)
@@ -239,51 +240,61 @@ class Circle : public Shape
 class Rect3d : public Shape
 {
     public:
-        Rect3d(Point3d _center, Point3d _size, Color _color)
+        Rect3d(Point3d _center, Point3d _size, Color _color, float _top_ratio = 1.0f)
             : Shape(_center)
         {
-            Point3d s(_size.X/2, _size.Y/2, _size.Z/2);
+            Point3d s (_size.X/2, _size.Y/2, _size.Z/2);
+
+            // top/bottom front/back right/left points
+            Point3d bfl(-s.X,-s.Y, s.Z);
+            Point3d bfr( s.X,-s.Y, s.Z);
+            Point3d bbl(-s.X,-s.Y,-s.Z);
+            Point3d bbr( s.X,-s.Y,-s.Z);
+            Point3d tfl(-s.X, s.Y, s.Z*_top_ratio);
+            Point3d tfr( s.X, s.Y, s.Z*_top_ratio);
+            Point3d tbl(-s.X, s.Y,-s.Z*_top_ratio);
+            Point3d tbr( s.X, s.Y,-s.Z*_top_ratio);
             
             std::vector<Point3d> p;
-            p.push_back(Point3d( s.X,-s.Y, s.Z));
-            p.push_back(Point3d(-s.X,-s.Y, s.Z));
-            p.push_back(Point3d(-s.X,-s.Y,-s.Z));
-            p.push_back(Point3d( s.X,-s.Y,-s.Z));
-            rects.push_back (Rect2d (_color, Point3d( 0,-1, 0), std::vector<Point3d> (p))); // top
+            p.push_back(bfr);
+            p.push_back(bbr);
+            p.push_back(bbl);
+            p.push_back(bfl);
+            rects.push_back (Rect2d (_color, Point3d( 0,-1, 0), std::vector<Point3d> (p))); // bottom
 
             p.clear();
-            p.push_back(Point3d( s.X, s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y,-s.Z));
-            p.push_back(Point3d( s.X, s.Y,-s.Z));
-            rects.push_back (Rect2d (_color, Point3d( 0, 1, 0), std::vector<Point3d> (p))); // bottom
+            p.push_back(tfr);
+            p.push_back(tbr);
+            p.push_back(tbl);
+            p.push_back(tfl);
+            rects.push_back (Rect2d (_color, Point3d( 0, 1, 0), std::vector<Point3d> (p))); // top
 
             p.clear();
-            p.push_back(Point3d( s.X,-s.Y,-s.Z));
-            p.push_back(Point3d( s.X, s.Y,-s.Z));
-            p.push_back(Point3d( s.X, s.Y, s.Z));
-            p.push_back(Point3d( s.X,-s.Y, s.Z));
+            p.push_back(tfr);
+            p.push_back(bfr);
+            p.push_back(bbr);
+            p.push_back(tbr);
             rects.push_back (Rect2d (_color, Point3d( 1, 0, 0), std::vector<Point3d> (p))); // right
 
             p.clear();
-            p.push_back(Point3d(-s.X,-s.Y,-s.Z));
-            p.push_back(Point3d(-s.X,-s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y,-s.Z));
+            p.push_back(tfl);
+            p.push_back(tbl);
+            p.push_back(bbl);
+            p.push_back(bfl);
             rects.push_back (Rect2d (_color, Point3d(-1, 0, 0), std::vector<Point3d> (p))); // left
 
             p.clear();
-            p.push_back(Point3d(-s.X,-s.Y, s.Z));
-            p.push_back(Point3d( s.X,-s.Y, s.Z));
-            p.push_back(Point3d( s.X, s.Y, s.Z));
-            p.push_back(Point3d(-s.X, s.Y, s.Z));
+            p.push_back(bfl);
+            p.push_back(bfr);
+            p.push_back(tfr);
+            p.push_back(tfl);
             rects.push_back (Rect2d (_color, Point3d( 0, 0, 1), std::vector<Point3d> (p))); // front
 
             p.clear();
-            p.push_back(Point3d(-s.X,-s.Y,-s.Z));
-            p.push_back(Point3d( s.X,-s.Y,-s.Z));
-            p.push_back(Point3d( s.X, s.Y,-s.Z));
-            p.push_back(Point3d(-s.X, s.Y,-s.Z));
+            p.push_back(bbl);
+            p.push_back(tbl);
+            p.push_back(tbr);
+            p.push_back(bbr);
             rects.push_back (Rect2d (_color, Point3d( 0, 0,-1), std::vector<Point3d> (p))); // back
         };
 
@@ -354,11 +365,12 @@ class Sphere : public Shape
 class Cylinder : public Shape
 {
    public:
-        Cylinder (Point3d _center, float _height, float _radius, Color _color) : Shape(_center)
+        Cylinder (Point3d _center, float _height, float _radius, Color _cylinderColor, Color _endColor) : Shape(_center)
         {
             height = _height;
             radius = _radius;
-            color = _color;
+            cylinderColor = _cylinderColor;
+            endColor = _endColor;
         };
 
         void Draw(bool _drawOnly = false)
@@ -366,10 +378,11 @@ class Cylinder : public Shape
             glPushMatrix();
             Transform();
 
-            glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
+            glColor4f(cylinderColor.red, cylinderColor.blue, cylinderColor.green, 1 - cylinderColor.alpha);
             gluCylinder(gluNewQuadric(), radius, radius, height, 50, 50);
-            Circle c1(Point3d(0, 0, 0), radius, Color(50,50,50));
-            Circle c2(Point3d(0, 0, height), radius, Color(50,50,50));
+            Circle c1(Point3d(0, 0, 0), radius, endColor);
+            Circle c2(Point3d(0, 0, height), radius, endColor);
+            c1.Rotate(180);
             c1.Draw();
             c2.Draw();
 
@@ -380,7 +393,8 @@ class Cylinder : public Shape
 
         float height;
         float radius;
-        Color color;
+        Color cylinderColor;
+        Color endColor;
 };
 
 class Pyramid : public Shape
@@ -451,6 +465,32 @@ class Pyramid : public Shape
 
         Point3d size;
         Color colors[5];
+};
+
+class Teapot : public Shape
+{
+   public:
+        Teapot (Point3d _center, float _size, Color _color) : Shape(_center)
+        {
+            size = _size;
+            color = _color;
+        };
+
+        void Draw(bool _drawOnly = false)
+        {
+            glPushMatrix();
+            Transform();
+
+            glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
+            glutSolidTeapot(size);
+
+            glPopMatrix();
+        }
+
+        void SetColor(Color _color) { color = _color; }
+
+        float size;
+        Color color;
 };
 
 class Text : public Shape

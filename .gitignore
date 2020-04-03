@@ -1,2 +1,8 @@
 *.o
 main
+*.exe
+
+*.layout
+*.depend
+bin/
+obj/
