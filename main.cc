@@ -188,44 +188,44 @@ void SpecialKey(int key, int x, int y)
 {
     switch(key)
     {
-    case GLUT_KEY_F1:
-    ViewDirection = 0;
-    break;
-   case GLUT_KEY_F2:
-    ViewDirection = 1;
-    break;
-    case GLUT_KEY_F3:
-    ViewDirection = -1;
-    break;
-    case GLUT_KEY_F4:
-        OutIn =0;
-    ViewDirection = 0;
-    break;
-   case GLUT_KEY_F5:
-       OutIn =1;
-    ViewDirection = 1;
-    break;
-case GLUT_KEY_F6:
-        OutIn =2;
-        break;
-    case GLUT_KEY_F7:
-        OutIn =3;
-    break;
-   case GLUT_KEY_F8:
-       OutIn =4;
-    break;
-    case GLUT_KEY_F9:
-        OutIn =5;
-    break;
-    case GLUT_KEY_F10:
-        OutIn =6;
-    break;
-   case GLUT_KEY_F11:
-       OutIn =7;
-    break;
-    case GLUT_KEY_F12:
-        OutIn =8;
-    break;
+        case GLUT_KEY_F1:
+            ViewDirection = 0;
+            break;
+        case GLUT_KEY_F2:
+            ViewDirection = 1;
+            break;
+        case GLUT_KEY_F3:
+            ViewDirection = -1;
+            break;
+        case GLUT_KEY_F4:
+            OutIn =0;
+            ViewDirection = 0;
+            break;
+        case GLUT_KEY_F5:
+           OutIn =1;
+            ViewDirection = 1;
+            break;
+        case GLUT_KEY_F6:
+            OutIn =2;
+            break;
+        case GLUT_KEY_F7:
+            OutIn =3;
+            break;
+       case GLUT_KEY_F8:
+           OutIn =4;
+            break;
+        case GLUT_KEY_F9:
+            OutIn =5;
+            break;
+        case GLUT_KEY_F10:
+            OutIn =6;
+            break;
+        case GLUT_KEY_F11:
+            OutIn =7;
+            break;
+        case GLUT_KEY_F12:
+            OutIn =8;
+            break;
     }
 }
 // Only used for exiting the program
