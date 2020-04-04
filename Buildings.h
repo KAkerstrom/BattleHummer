@@ -19,28 +19,28 @@ class Buildings : public Object
 
             switch(Quadrant){
                 case 0:
-                   B_X = 0.95;B_Z=0.65;
+                   B_X = 0.95;B_Z=0.95;
                    break;
                 case 1:
-                   B_X = 0.95;B_Z=-0.65;
+                   B_X = 0.95;B_Z=-0.95;
                    break;
                 case 2:
-                   B_X = -0.95;B_Z=0.15;
+                   B_X = -0.95;B_Z=0.95;
                    break;
                 case 3:
-                   B_X =-0.95;B_Z=0.65;
+                   B_X =-0.95;B_Z=-0.95;
                    break;
             }
             switch(Decision){
                 case 0:
                     {
-                    Rect3d *foundation = new Rect3d(Point3d(B_X,0.2,B_Z), _size, Color(125, 125, 0, 0.4));
+                    Rect3d *foundation = new Rect3d(Point3d(B_X,0.25,B_Z), _size, Color(125, 125, 0, 0.4));
                     shapes.push_back(foundation);
                     _center.Y = _center.Y;
                     Point3d _size(0.8,0.45,0.25);
-                    Rect3d *WindowsLR = new Rect3d(Point3d(B_X,0.2,B_Z), _size,Color(0,0,125,0.8));
+                    Rect3d *WindowsLR = new Rect3d(Point3d(B_X,0.35,B_Z), _size,Color(0,0,125,0.8));
                     Point3d _size2(0.25,0.35,0.8);
-                    Rect3d *WindowsFB = new Rect3d(Point3d(B_X,0.2,B_Z), _size2,Color(0,0,125,0.8));
+                    Rect3d *WindowsFB = new Rect3d(Point3d(B_X,0.35,B_Z), _size2,Color(0,0,125,0.8));
                     shapes.push_back(WindowsLR);
                     shapes.push_back(WindowsFB);
                     break;
