@@ -63,13 +63,13 @@ int OutIn = 0;
 bool paused = false;
 
 //Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
-Perspective p(45.0f, (GLfloat)Window_Width / (GLfloat)Window_Height, 0.1f, 100.0f);
+Perspective p(45.0f, (GLfloat)Window_Width / (GLfloat)Window_Height, 0.1f, 30.0f);
 Camera c(eye, lookPoint, up);
 Rect3d r(Point3d(0, 0, 0), Point3d(2, 2, 2), Color(250, 100, 10, 0));
 View gameView(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p, &c);
 
 //Ortho p1(Point3d(0, 0, 0), Point3d(Window_Width / 50, Window_Height / 50, 500));
-Rect3d world(Point3d(0, 0, 0), Point3d(200, 0.25, 200), Color(0, 0, 0, 0));
+//Rect3d world(Point3d(0, 0, 0), Point3d(200, 0.25, 200), Color(0, 0, 0, 0));
 
 BattleHummer humm(Point3d(-0.25f, 0.5, 1), 0.3f);
 BattleHummer test(Point3d(0, 0.5f, -2.0f), 0.3f);
@@ -173,12 +173,13 @@ void CallBackRenderScene(void)
     gameView.SetPosition(Point2d(0, 0));
     gameView.SetSize(Point2d(Window_Width, Window_Height));
     p.aspect = (float)(Window_Width / Window_Height);
-    gameView.Draw();
+    gameView.Draw(40);
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     glutSwapBuffers();
 }
+
 void SpecialKey(int key, int x, int y)
 {
     switch(key)
@@ -225,6 +226,10 @@ void KeyPressed(unsigned char key, int x, int y)
         case 'R':
         case 'r':
             humm.ResetPos();
+            break;
+        case 'P':
+        case 'p':
+            paused = !paused;
             break;
         case 27:
             printf("Escape key pressed. Exiting...\n");
@@ -315,8 +320,8 @@ void MyInit(int Width, int Height)
 void Timer(int id)
 {
     Point3d hc = humm.GetCenter();
-    if (hc.X < -100 || hc.X > 100
-        || hc.Z < -100 || hc.Z > 100
+    if (hc.X < -104 || hc.X > 104
+        || hc.Z < -104 || hc.Z > 104
         || hc.Y < 0)
             humm.Move(Point3d(0,-0.1f,0));
 
@@ -347,45 +352,86 @@ int main(int argc, char **argv)
     printf("\n");
 
     test.Rotate(270);
-    gameView.AddShape(&world);
     gameView.AddShape(&test);
     gameView.AddShape(&humm);
 
     int worldScaling = 2;
     for (int x = -100; x < 100; x += 6)
-    {
         for (int z = -100; z < 100; z += 6)
         {
-            Rect3d *block = new Rect3d(Point3d(x, 0.1, z), Point3d(1.75 * worldScaling, 0.25, 1.75 * worldScaling), Color(75, 75, 75, 0));
+            Point3d blockSize(1.75f * worldScaling, 0.25f*worldScaling, 1.75f * worldScaling);
+            Rect3d *block = new Rect3d(Point3d(x, 0.0, z), blockSize, Color(75, 75, 75, 0));
             gameView.AddShape(block);
-            for(int quads =0;quads<3;quads++){
-            Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
-            gameView.AddShape(BlockBuilding);
-            Rotatepieces.push_back(*BlockBuilding);
+
+            // draw road
+            Rect2d* roadLine = new Rect2d
+            (
+                Point3d(x, 0.069f*worldScaling, z),
+                Point2d(blockSize.X*2.0f, blockSize.Z*2.0f),
+                Color(5,5,5)
+            );
+            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine -> Rotate(180);
+            gameView.AddShape(roadLine);
+
+            // draw white outline
+            roadLine = new Rect2d
+            (
+                Point3d(x, 0.07f*worldScaling, z),
+                Point2d(blockSize.X*1.2f, blockSize.Z*1.2f),
+                Color(255,255,255)
+            );
+            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine -> Rotate(180);
+            gameView.AddShape(roadLine);
+
+            // Draw dotted lines
+            roadLine = new Rect2d
+            (
+                Point3d(x + 1.5f*worldScaling, 0.07f*worldScaling, z - 0.75f*worldScaling),
+                Point2d(0.1f*worldScaling, 0.6f*worldScaling),
+                Color(255,255,255)
+            );
+            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine -> Rotate(180);
+            gameView.AddShape(roadLine);
+
+            roadLine = new Rect2d
+            (
+                Point3d(x + 1.5f*worldScaling, 0.07f*worldScaling, z + 0.75f*worldScaling),
+                Point2d(0.1f*worldScaling, 0.6f*worldScaling),
+                Color(255,255,255)
+            );
+            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine -> Rotate(180);
+            gameView.AddShape(roadLine);
+
+            roadLine = new Rect2d
+            (
+                Point3d(x - 0.75f*worldScaling, 0.07f*worldScaling, z + 1.5f*worldScaling),
+                Point2d(0.6f*worldScaling, 0.1f*worldScaling),
+                Color(255,255,255)
+            );
+            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine -> Rotate(180);
+            gameView.AddShape(roadLine);
+
+            roadLine = new Rect2d
+            (
+                Point3d(x + 0.75f*worldScaling, 0.07f*worldScaling, z + 1.5f*worldScaling),
+                Point2d(0.6f*worldScaling, 0.1f*worldScaling),
+                Color(255,255,255)
+            );
+            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine -> Rotate(180);
+            gameView.AddShape(roadLine);
+
+            for(int quads =0;quads<3;quads++)
+            {
+                Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
+                gameView.AddShape(BlockBuilding);
+                Rotatepieces.push_back(*BlockBuilding);
             }
-            Rect3d *middleLine = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
-            gameView.AddShape(middleLine);
-            //middleLine->Rotate(45);
-            //gameView.AddShape(middleLine);
-            Rect3d *middleLine2 = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z + (1.5 * worldScaling)), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
-            gameView.AddShape(middleLine2);
-            Rect3d *edgeLine = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255, 255, 255, 0));
-            gameView.AddShape(edgeLine);
-            Rect3d *edgeLine2 = new Rect3d(Point3d(x + (2.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255, 255, 255, 0));
-            gameView.AddShape(edgeLine2);
-            Rect3d *middleLine1Rot = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.5 * worldScaling), Color(255, 255, 255, 0));
-            middleLine1Rot->Rotate(90);
-            middleLine1Rot->Move(Point3d(3.0, 0.0, 1.0));
-            gameView.AddShape(middleLine1Rot);
-            Rect3d *edgeLine1Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255, 255, 255, 0));
-            edgeLine1Rot->Rotate(90);
-            edgeLine1Rot->Move(Point3d(4.0, 0.0, 0.0));
-            gameView.AddShape(edgeLine1Rot);
-            Rect3d *edgeLine2Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255, 255, 255, 0));
-            edgeLine2Rot->Rotate(90);
-            edgeLine2Rot->Move(Point3d(4.0, 0.0, 2.0));
-            gameView.AddShape(edgeLine2Rot);
-        }
     }
 
     glutInit(&argc, argv);

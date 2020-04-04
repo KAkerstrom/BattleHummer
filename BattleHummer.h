@@ -20,8 +20,8 @@ class BattleHummer : public Object
         Point3d* aheadPoint;
         bool rotR, rotL, throttle, brake;
         double moveSp, followDist, fDist = 1.5;
-        double rotSp = 2.0f;
-        double maxSpeed = 0.2;
+        double rotSp = 2.5f;
+        double maxSpeed = 0.25;
         double minSpeed = -0.09;
         double accel = 0.03;
 

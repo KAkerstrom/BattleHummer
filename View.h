@@ -39,6 +39,9 @@ class Camera
             eye.Z += _move.Z;
         }
 
+        Point3d GetEye()    { return eye; }
+        Point3d GetLookAt() { return lookAt; }
+        Point3d GetUp()     { return up; }
         void SetLookAt(Point3d _lookAt) { lookAt = _lookAt; }
         void SetEye(Point3d _eye) { eye = _eye; }
         void SetUp(Point3d _up) { up = _up; }
@@ -89,7 +92,7 @@ class View
             && _point.Y < btm_left.Y + size.Y);
         }
 
-        void Draw()
+        void Draw(float renderRadius)
         {
             glMatrixMode(GL_PROJECTION);
             glPushMatrix();
@@ -104,10 +107,17 @@ class View
             glLoadIdentity();
             if (camera != 0)
                 camera->LookAt();
+
             for (int i = 0; i < shapes.size(); i++)
             {
                 Shape* s = shapes[i];
-                s -> Draw();
+                Point3d pos = s -> GetCenter();
+                Point3d cam = camera -> GetEye();
+                if (pos.X > cam.X - renderRadius
+                    && pos.X < cam.X + renderRadius
+                    && pos.Z > cam.Z - renderRadius
+                    && pos.Z < cam.Z + renderRadius)
+                        s -> Draw();
             }
 
             glPopMatrix();

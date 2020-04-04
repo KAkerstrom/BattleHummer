@@ -165,17 +165,17 @@ class Rect2d : public Shape
             points = _points;
         };
 
-        /*Rect2d(Point2d _size, Color _color)
-            : Shape(Point3d(0,0,0))
+        Rect2d(Point3d _center, Point2d _size, Color _color)
+            : Shape(_center)
         {
             Point2d s(_size.X/2, _size.Y/2);
             points.push_back(Point3d(-s.X, 0, s.Y));
-            points.push_back(Point3d(-s.X, 0, s.Y));
+            points.push_back(Point3d(-s.X, 0,-s.Y));
             points.push_back(Point3d( s.X, 0,-s.Y));
-            points.push_back(Point3d( s.X, 0,-s.Y));
+            points.push_back(Point3d( s.X, 0, s.Y));
             normal = Point3d(0,0,1);
             color = _color;
-        };*/
+        };
 
         void SetColor(Color _color) { color = _color; }
 
