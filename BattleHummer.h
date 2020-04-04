@@ -7,8 +7,15 @@
 #include <math.h>
 #include <iostream>
 
+enum FR {forward, reverse, neutral};
+enum LR {left, right, straight};
+
 class BattleHummer : public Object
 {
+    private:
+        FR fr = neutral;
+        LR lr = straight;
+
     public:
         std::string plateText = "PAWKK";
         Shape* antenna;
@@ -287,7 +294,17 @@ class BattleHummer : public Object
 
         void SetFDist(double Dist)
         {
-            fDist= Dist;
+            fDist = Dist;
+        }
+
+        void Drive(FR dir)
+        {
+            fr = dir;
+        }
+
+        void Steer(LR dir)
+        {
+            lr = dir;
         }
 
         void UpdatePosition()
@@ -305,58 +322,54 @@ class BattleHummer : public Object
             aheadPoint->X =center.X + followDist * cos((-rot.deg - 90) * M_PI/180);
             aheadPoint->Z = center.Z + followDist * sin((-rot.deg - 90) * M_PI/180);
             Move(Point3d(-x, 0, -z));
-
-            if(throttle)
-            {
-                if(moveSp < maxSpeed)
-                    moveSp += accel;
-            }
-            else
-            {
-                if(moveSp > 0)
-                    moveSp -= accel;
-            }
-
             Color brakeColor;
-            if(brake)
+            double adjRotSp = rotSp;
+            switch (fr)
             {
-                brakeColor = Color(255,0,0);
-                if(moveSp > minSpeed)
-                {
-                    moveSp -= accel;
-                }
+                case forward:
+                    if(moveSp < maxSpeed)
+                        moveSp += accel;
+
+                    adjRotSp = rotSp;
+                    break;
+                case reverse:
+                    brakeColor = Color(255,0,0);
+                    if(moveSp > minSpeed)
+                        moveSp -= accel;
+
+                    adjRotSp = -rotSp;
+                    break;
+                case neutral:
+                    brakeColor = Color(100,0,0);
+                    if(moveSp < 0)
+                        moveSp += accel;
+                    if(moveSp > 0)
+                        moveSp -= accel;
+
+                    adjRotSp = rotSp;
+                    break;
+                default:
+                    // ¯\_(ツ)_/¯
+                    break;
             }
-            else
+
+            switch (lr)
             {
-                brakeColor = Color(100,0,0);
-                if(moveSp < 0)
-                    moveSp += accel;
+                case left:
+                    Rotate(adjRotSp);
+                    break;
+                case right:
+                    Rotate(-adjRotSp);
+                    break;
+                case neutral:
+                    break;
+                default:
+                    // ¯\_(ツ)_/¯
+                    break;
             }
-                
-            
+
             brake1 -> SetColor(brakeColor);
             brake2 -> SetColor(brakeColor);
-
-            if(rotL)
-            {
-                if(brake)
-                    Rotate(-rotSp);
-                else
-                    Rotate(rotSp);
-            }
-            if(rotR)
-            {
-                if(brake)
-                    Rotate(rotSp);
-                else
-                    Rotate(-rotSp);
-            }
-
-            if(moveSp <= minSpeed)
-                    moveSp = minSpeed;
-
-            if(moveSp >= maxSpeed)
-                    moveSp = maxSpeed;
 
         };
 };

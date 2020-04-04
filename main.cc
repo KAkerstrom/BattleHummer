@@ -141,8 +141,6 @@ void CallBackRenderScene(void)
     {
         Point3d fPoint(hPoint);
         fPoint.Y = fPoint.Y + 0.2;
-        //std::cout << "h: " << hPoint.X << ", " << hPoint.Y << ", " << hPoint.Z << std::endl;
-        //std::cout << "f: " << fPoint.X << ", " << fPoint.Y << ", " << fPoint.Z << std::endl;
 
         c.SetEye(fPoint);
         hPoint.Y = hPoint.Y + 0.2;
@@ -204,23 +202,19 @@ void KeyPressed(unsigned char key, int x, int y)
     {
         case 'W':
         case 'w':
-            humm.throttle = true;
-            humm.brake = false;
+            humm.Drive(forward);
             break;
         case 'A':
         case 'a':
-            humm.rotL = true;
-            humm.rotR = false;
+            humm.Steer(left);
             break;
         case 'S':
         case 's':
-            humm.brake = true;
-            humm.throttle = false;
+            humm.Drive(reverse);
             break;
         case 'D':
         case 'd':
-            humm.rotR = true;
-            humm.rotL = false;
+            humm.Steer(right);
             break;
         case 'R':
         case 'r':
@@ -240,21 +234,17 @@ void KeyReleased(unsigned char key, int x, int y)
 {
     switch (key)
     {
+        case 'S':
+        case 's':
         case 'W':
         case 'w':
-            humm.throttle = false;
+            humm.Drive(neutral);
             break;
         case 'A':
         case 'a':
-            humm.rotL = false;
-            break;
-        case 'S':
-        case 's':
-            humm.brake = false;
-            break;
         case 'D':
         case 'd':
-            humm.rotR = false;
+            humm.Steer(straight);
             break;
         default:
             printf("Unrecognized key released: %d\n", key);
