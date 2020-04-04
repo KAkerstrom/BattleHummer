@@ -10,7 +10,7 @@ Required
 	Add reseting position with 'r'
 	Change from WASD to QWAZ
 	Collision detection against buildings/blocks
-	
+	Reversing
 
 Extra
 	Add hubcaps to the tires and make them spin when driving

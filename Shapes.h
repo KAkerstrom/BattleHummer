@@ -269,9 +269,9 @@ class Rect3d : public Shape
 
             std::vector<Point3d> p;
             p.push_back(bfr);
-            p.push_back(bbr);
-            p.push_back(bbl);
             p.push_back(bfl);
+            p.push_back(bbl);
+            p.push_back(bbr);
             rects.push_back (Rect2d (_color, Point3d( 0,-1, 0), std::vector<Point3d> (p))); // bottom
 
             p.clear();
@@ -508,25 +508,40 @@ class Teapot : public Shape
 class Text : public Shape
 {
     public:
-        Text(Point3d _center, Color _color, std::string _text)
+        Text(Point3d _center, Color _color, float _size, std::string _text)
             : Shape(_center)
         {
+            size = _size;
             color = _color;
             text = _text;
         };
 
         void Draw(bool _drawOnly = false)
         {
-            char buf[256];
-            glColor4f(color.red, color.green, color.green, 1 - color.alpha);
-            sprintf(buf, "%s", text.c_str());
-            //glRasterPos2i(2,2);
-            glRasterPos2i(center.X, center.Y);
+            glPushMatrix();
+            Transform();
+            
+            //glDisable(GL_LIGHTING);
+            glColor4f(color.red, color.blue, color.green, 1 - color.alpha);
+            glScalef(0.001f*size, 0.001f*size, 0.001f*size);
             for(int i = 0;i < text.size(); i++)
-                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, buf[i]);
+                glutStrokeCharacter(GLUT_STROKE_ROMAN, text[i]);
+            //glEnable(GL_LIGHTING);
+            glPopMatrix();
+
+
+/*
+            glPushMatrix();
+            Transform();
+            //glRasterPos2i(2,2);
+            glRasterPos3i(center.X, center.Y, center.Z);
+            for(int i = 0;i < text.size(); i++)0
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, text[i]);
+            glPopMatrix();*/
         }
 
     protected:
+        float size;
         Color color;
         std::string text;
 };

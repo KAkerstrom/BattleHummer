@@ -10,21 +10,24 @@
 class BattleHummer : public Object
 {
     public:
+        std::string plateText = "PAWKK";
         Shape* antenna;
         Circle* brake1;
         Circle* brake2;
 
-        Point3d * followPoint;
-        Point3d * aheadPoint;
+        Point3d originalCenter;
+        Point3d* followPoint;
+        Point3d* aheadPoint;
         bool rotR, rotL, throttle, brake;
         double moveSp, followDist, fDist = 1.5;
         double rotSp = 2.0f;
-        double maxSpeed = 1.18;
+        double maxSpeed = 0.2;
         double minSpeed = -0.09;
         double accel = 0.03;
 
         BattleHummer(Point3d _center, float _size = 1.0f) : Object(_center)
         {
+            originalCenter = _center;
             followPoint = new Point3d(0, 1.3, 0);
             aheadPoint = new Point3d(0, 1.3, 0);
             moveSp = 0;
@@ -38,7 +41,7 @@ class BattleHummer : public Object
             Color cylinderColor(100, 5, 5);
             Cylinder *leftRL = new Cylinder
             (
-                Point3d(1.0f * _size, 0.0f * _size, -1.0f * _size),
+                Point3d(0.95f * _size, 0.0f * _size, -1.0f * _size),
                 0.55f * _size,
                 0.2f * _size,
                 cylinderColor,
@@ -47,7 +50,7 @@ class BattleHummer : public Object
             shapes.push_back(leftRL);
             Cylinder *rightRL = new Cylinder
             (
-                Point3d(-1.0f * _size, 0.0f * _size, -1.0f * _size),
+                Point3d(-0.95f * _size, 0.0f * _size, -1.0f * _size),
                 0.55f * _size,
                 0.2f * _size,
                 cylinderColor,
@@ -265,7 +268,22 @@ class BattleHummer : public Object
             // Create body
             Rect3d *body = new Rect3d(Point3d(0,0,0), bodySize, Color(117, 50, 60));
             shapes.push_back(body);
+            
+            // Create text
+            Text* text = new Text
+            (
+                Point3d( -0.2f*_size, -0.25f*_size, 1.56f*_size),
+                Color(50,50,50),
+                1.0f*_size,
+                plateText
+            );
+            shapes.push_back(text);
         };
+
+        void ResetPos()
+        {
+            center = originalCenter;
+        }
 
         void SetFDist(double Dist)
         {
