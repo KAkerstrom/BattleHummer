@@ -59,7 +59,7 @@ class Buildings : public Object
                 case 2:
                    {
 
-                    Cylinder *top = new Cylinder(Point3d(B_X+0.4,0.7,B_Z),0.01f,0.2f,Color(125,75,15,0.6),Color(125,75,15,0.6));
+                    Cylinder *top = new Cylinder(Point3d(B_X+0.4,0.7,B_Z),0.15f,0.15f,Color(125,75,15,0.6),Color(15,115,55,0.6));
                     top -> SetRotation(Rotation(Point3d(1,1,0), 0));
                     top -> Rotate(45);
                     shapes.push_back(top);
