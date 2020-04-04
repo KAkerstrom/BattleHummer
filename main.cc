@@ -355,7 +355,7 @@ int main(int argc, char **argv)
 
             for (int quads = 0;quads < 3; quads++)
             {
-                Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
+                Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 2.5, 0.75),quads);
                 gameView.AddShape(BlockBuilding);
                 Rotatepieces.push_back(*BlockBuilding);
             }
