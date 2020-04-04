@@ -364,11 +364,13 @@ int main(int argc, char **argv)
         {
             Rect3d *block = new Rect3d(Point3d(x, 0.1, z), Point3d(1.75 * worldScaling, 0.25, 1.75 * worldScaling), Color(75, 75, 75, 0));
             gameView.AddShape(block);
-            for(int quads =0;quads<3;quads++){
-            Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
-            gameView.AddShape(BlockBuilding);
-            Rotatepieces.push_back(*BlockBuilding);
+
+            for(int quads = 0;quads<3;quads++){
+                Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
+                gameView.AddShape(BlockBuilding);
+                Rotatepieces.push_back(*BlockBuilding);
             }
+
             Rect3d *middleLine = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(middleLine);
             //middleLine->Rotate(45);
