@@ -349,17 +349,15 @@ int main(int argc, char **argv)
     printf("\tDevon Kuss\n");
     printf("\n");
 
-    test.Rotate(90);
+    test.Rotate(270);
     gameView.AddShape(&world);
     gameView.AddShape(&test);
     gameView.AddShape(&humm);
 
     int worldScaling = 2;
-    for (int x = -100; x < 100; x += 6)
-    {
-        for (int y = -100; y < 100; y += 6)
-        {
-            Rect3d *block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75 * worldScaling, 0.25, 1.75 * worldScaling), Color(75, 75, 75, 0));
+    for (int x = -100; x < 100; x+=6) {
+        for (int y = -100; y < 100; y+=6){
+            Rect3d* block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75 * worldScaling,0.25,1.75* worldScaling), Color(75,75,75,0));
             gameView.AddShape(block);
             Rect3d *middleLine = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(middleLine);

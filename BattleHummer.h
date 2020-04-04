@@ -1,3 +1,6 @@
+#ifndef BATTLE_HUMMER
+#define BATTLE_HUMMER
+
 #include "Shapes.h"
 #include "Object.h"
 #include <stdio.h>
@@ -8,6 +11,9 @@ class BattleHummer : public Object
 {
     public:
         Shape* antenna;
+        Circle* brake1;
+        Circle* brake2;
+
         Point3d * followPoint;
         Point3d * aheadPoint;
         bool rotR, rotL, throttle, brake;
@@ -92,6 +98,7 @@ class BattleHummer : public Object
             );
             shapes.push_back(cab);
 
+            // Create front window
             float fw_btmZ = -1.155f*_size;
             float fw_topZ = -0.95f*_size;
             float fw_topY = 1.1f*_size;
@@ -106,9 +113,136 @@ class BattleHummer : public Object
             (
                 Color(c_cyan, 0),
                 Point3d(0,0,1),
-                p
+                std::vector<Point3d>(p)
             );
             shapes.push_back(frontWindow);
+
+            // Create Back window
+            fw_btmZ = 0.155f*_size;
+            fw_topZ = -0.05f*_size;
+            p.clear();
+            p.push_back(Point3d(-fw_X,fw_topY,fw_topZ)); // top-left (from driver's perspective)
+            p.push_back(Point3d(-fw_X,fw_btmY,fw_btmZ)); // bottom-left
+            p.push_back(Point3d( fw_X,fw_btmY,fw_btmZ)); // bottom-right
+            p.push_back(Point3d( fw_X,fw_topY,fw_topZ)); // top-right
+            Rect2d* backWindow = new Rect2d
+            (
+                Color(c_cyan, 0),
+                Point3d(0,0,1),
+                std::vector<Point3d>(p)
+            );
+            shapes.push_back(backWindow);
+
+            fw_btmY = 0.65f*_size;
+            fw_topY = 1.0f*_size;
+            p.clear();
+            p.push_back(Point3d(-0.7f*_size,fw_topY,-0.2f*_size));
+            p.push_back(Point3d(-0.7f*_size,fw_topY,-0.75f*_size));
+            p.push_back(Point3d(-0.7f*_size,fw_btmY,-0.85f*_size));
+            p.push_back(Point3d(-0.7f*_size,fw_btmY,-0.1f*_size));
+            Rect2d* leftWindow = new Rect2d
+            (
+                Color(c_cyan, 0),
+                Point3d(0,0,1),
+                std::vector<Point3d>(p)
+            );
+            shapes.push_back(leftWindow);
+
+            p.clear();
+            p.push_back(Point3d(0.7f*_size,fw_topY,-0.2f*_size));
+            p.push_back(Point3d(0.7f*_size,fw_btmY,-0.1f*_size));
+            p.push_back(Point3d(0.7f*_size,fw_btmY,-0.85f*_size));
+            p.push_back(Point3d(0.7f*_size,fw_topY,-0.75f*_size));
+            Rect2d* rightWindow = new Rect2d
+            (
+                Color(c_cyan, 0),
+                Point3d(0,0,1),
+                std::vector<Point3d>(p)
+            );
+            shapes.push_back(rightWindow);
+
+            // Create headlights
+            Circle* leftHeadlight = new Circle
+            (
+                Point3d(-0.4f*_size, 0.2f*_size, -1.55f*_size),
+                0.15f*_size,
+                Color(255, 255, 0)
+            );
+            leftHeadlight -> Rotate(180);
+            shapes.push_back(leftHeadlight);
+
+            Circle* rightHeadlight = new Circle
+            (
+                Point3d(0.4f*_size, 0.2f*_size, -1.55f*_size),
+                0.15f*_size,
+                Color(255, 255, 0)
+            );
+            rightHeadlight -> Rotate(180);
+            shapes.push_back(rightHeadlight);
+
+            // Create brakelights
+            Circle* leftBrakelight = new Circle
+            (
+                Point3d(0.4f*_size, 0.2f*_size, 1.55f*_size),
+                0.15f*_size,
+                Color(100, 0, 0)
+            );
+            shapes.push_back(leftBrakelight);
+            brake1 = leftBrakelight;
+
+            Circle* rightBrakelight = new Circle
+            (
+                Point3d(-0.4f*_size, 0.2f*_size, 1.55f*_size),
+                0.15f*_size,
+                Color(100, 0, 0)
+            );
+            shapes.push_back(rightBrakelight);
+            brake2 = rightBrakelight;
+
+            // Create front grill
+            p.clear();
+            p.push_back(Point3d( 0.25f*_size, -0.1f*_size, -1.55f*_size));
+            p.push_back(Point3d( 0.25f*_size, -0.35f*_size, -1.55f*_size));
+            p.push_back(Point3d(-0.25f*_size, -0.35f*_size, -1.55f*_size));
+            p.push_back(Point3d(-0.25f*_size, -0.1f*_size, -1.55f*_size));
+            Rect2d* grillPlate = new Rect2d
+            (
+                Color(c_teal, 0),
+                Point3d(0,0,1),
+                std::vector<Point3d>(p)
+            );
+            shapes.push_back(grillPlate);
+
+            Color barColor(c_yellow, 0);
+            for (int i = 0; i < 4; i++)
+            {
+                // Create grill bars
+                Cylinder* bar = new Cylinder
+                (
+                    Point3d((-0.15f + i*0.1f)*_size, -0.15f*_size, -1.54f*_size),
+                    0.2f*_size,
+                    0.03f*_size,
+                    barColor,
+                    barColor
+                );
+                bar -> SetRotation(Rotation(Point3d(1,0,0), 0));
+                bar -> Rotate(90);
+                shapes.push_back(bar);
+            }
+
+            // Create license plate
+            p.clear();
+            p.push_back(Point3d( 0.25f*_size, -0.1f*_size, 1.55f*_size));
+            p.push_back(Point3d(-0.25f*_size, -0.1f*_size, 1.55f*_size));
+            p.push_back(Point3d(-0.25f*_size,-0.35f*_size, 1.55f*_size));
+            p.push_back(Point3d( 0.25f*_size,-0.35f*_size, 1.55f*_size));
+            Rect2d* license = new Rect2d
+            (
+                Color(c_teal, 0),
+                Point3d(0,0,1),
+                std::vector<Point3d>(p)
+            );
+            shapes.push_back(license);
 
             // Create antenna
             Cylinder *wire = new Cylinder
@@ -132,10 +266,12 @@ class BattleHummer : public Object
             Rect3d *body = new Rect3d(Point3d(0,0,0), bodySize, Color(117, 50, 60));
             shapes.push_back(body);
         };
+
         void SetFDist(double Dist)
         {
             fDist= Dist;
         }
+
         void UpdatePosition()
         {
             antenna -> Rotate(2);
@@ -163,11 +299,18 @@ class BattleHummer : public Object
                     moveSp -= accel;
             }
 
+            Color brakeColor;
             if(brake)
             {
+                brakeColor = Color(255,0,0);
                 if(moveSp > 0)
                     moveSp -= accel * 2;
             }
+            else
+                brakeColor = Color(100,0,0);
+            
+            brake1 -> SetColor(brakeColor);
+            brake2 -> SetColor(brakeColor);
 
             if(rotL)
             {
@@ -192,3 +335,5 @@ class BattleHummer : public Object
             delete aheadPoint;
         }
 };
+
+#endif
