@@ -1,3 +1,7 @@
+#ifndef Object_H
+#define Object_H
+
+
 #include <GL/gl.h>   // OpenGL itself.
 #include <GL/glu.h>  // GLU support library.
 #include <GL/glut.h> // GLUT support library.
@@ -27,3 +31,4 @@ class Object : public Shape
     protected:
         std::vector<Shape*> shapes;
 };
+#endif

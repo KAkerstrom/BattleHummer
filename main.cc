@@ -13,6 +13,7 @@
 #include "Shapes.h"
 #include "View.h"
 #include "BattleHummer.h"
+#include "Buildings.h"
 
 #include <GL/gl.h>   // OpenGL itself.
 #include <GL/glu.h>  // GLU support library.
@@ -23,7 +24,7 @@
 int Window_ID;
 int Window_Width = 600;
 int Window_Height = 400;
-
+std::vector<Buildings> Rotatepieces;
 // Cube position and rotation speed variables.
 float X_Rot = 0.0f;
 float Y_Rot = 30.0f;
@@ -47,20 +48,18 @@ float L_Z = 0.0f;
 //////////////////////////////////////////////////////////
 static void PrintString(void *font, char *str)
 {
-   int i, len = strlen(str);
+    int i, len = strlen(str);
 
-   for (i = 0; i < len; i++)
-      glutBitmapCharacter(font, *str++);
+    for (i = 0; i < len; i++)
+        glutBitmapCharacter(font, *str++);
 }
 
 //Point3d cubeCenter (0,0,0);
-Point3d lookPoint (L_X, L_Y, L_Z);
-Point3d eye (EyeX, EyeY, EyeZ);
-Point3d up (0, 1, 0);
+Point3d lookPoint(L_X, L_Y, L_Z);
+Point3d eye(EyeX, EyeY, EyeZ);
+Point3d up(0, 1, 0);
 int ViewDirection = 0;
 int OutIn = 0;
-
-bool controlsEnabled = true;
 bool paused = false;
 
 //Ortho p (Point3d(0,0,0), Point3d(Window_Width/50, Window_Height/50, 500));
@@ -79,88 +78,89 @@ void CallBackRenderScene(void)
 {
     Point3d hPoint = humm.GetCenter();
 
-    if (OutIn >0)
+    if (OutIn > 0)
     {
         Point3d fPoint(humm.followPoint->X, humm.followPoint->Y, humm.followPoint->Z);
         Point3d aPoint(humm.aheadPoint->X, humm.aheadPoint->Y, humm.aheadPoint->Z);
-        switch(OutIn)
+        switch (OutIn)
         {
             case 1:
                 humm.SetFDist(1.5);
-                fPoint.X = fPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
-                fPoint.Z = fPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+                fPoint.X = fPoint.X - sin((humm.GetRotation().deg - 90) * M_PI / 180);
+                fPoint.Z = fPoint.Z - cos((humm.GetRotation().deg - 90) * M_PI / 180);
                 fPoint.Y = 2;
                 break;
             case 2:
                 humm.SetFDist(1.5);
-                fPoint.X = aPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
-                fPoint.Z = aPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+                fPoint.X = aPoint.X - sin((humm.GetRotation().deg - 90) * M_PI / 180);
+                fPoint.Z = aPoint.Z - cos((humm.GetRotation().deg - 90) * M_PI / 180);
                 fPoint.Y = 2;
                 break;
             case 3:
                 humm.SetFDist(1.5);
-                fPoint.X = (aPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180));
-                fPoint.Z = (aPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180));
+                fPoint.X = (aPoint.X - sin((humm.GetRotation().deg + 90) * M_PI / 180));
+                fPoint.Z = (aPoint.Z - cos((humm.GetRotation().deg + 90) * M_PI / 180));
                 fPoint.Y = 2;
                 break;
             case 4:
                 humm.SetFDist(1.5);
-                fPoint.X = (fPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180));
-                fPoint.Z = (fPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180));
+                fPoint.X = (fPoint.X - sin((humm.GetRotation().deg + 90) * M_PI / 180));
+                fPoint.Z = (fPoint.Z - cos((humm.GetRotation().deg + 90) * M_PI / 180));
                 fPoint.Y = 2;
                 break;
             case 5:
                 humm.SetFDist(3.5);
-                fPoint.X = fPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
-                fPoint.Z = fPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+                fPoint.X = fPoint.X - sin((humm.GetRotation().deg - 90) * M_PI / 180);
+                fPoint.Z = fPoint.Z - cos((humm.GetRotation().deg - 90) * M_PI / 180);
                 fPoint.Y = 4;
                 break;
             case 6:
                 humm.SetFDist(3.5);
-                fPoint.X = aPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
-                fPoint.Z = aPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+                fPoint.X = aPoint.X - sin((humm.GetRotation().deg - 90) * M_PI / 180);
+                fPoint.Z = aPoint.Z - cos((humm.GetRotation().deg - 90) * M_PI / 180);
                 fPoint.Y = 4;
                 break;
             case 7:
                 humm.SetFDist(3.5);
-                fPoint.X = (aPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180));
-                fPoint.Z = (aPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180));
+                fPoint.X = (aPoint.X - sin((humm.GetRotation().deg + 90) * M_PI / 180));
+                fPoint.Z = (aPoint.Z - cos((humm.GetRotation().deg + 90) * M_PI / 180));
                 fPoint.Y = 4;
                 break;
             case 8:
                 humm.SetFDist(3.5);
-                fPoint.X = (fPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180));
-                fPoint.Z = (fPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180));
+                fPoint.X = (fPoint.X - sin((humm.GetRotation().deg + 90) * M_PI / 180));
+                fPoint.Z = (fPoint.Z - cos((humm.GetRotation().deg + 90) * M_PI / 180));
                 fPoint.Y = 4;
                 break;
         }
+
         c.SetEye(fPoint);
         c.SetLookAt(hPoint);
     }
     else
     {
         Point3d fPoint(hPoint);
-        fPoint.Y = fPoint.Y +0.2;
+        fPoint.Y = fPoint.Y + 0.2;
         //std::cout << "h: " << hPoint.X << ", " << hPoint.Y << ", " << hPoint.Z << std::endl;
         //std::cout << "f: " << fPoint.X << ", " << fPoint.Y << ", " << fPoint.Z << std::endl;
 
         c.SetEye(fPoint);
-        hPoint.Y = hPoint.Y + 0.2f;
-        switch(ViewDirection)
+        hPoint.Y = hPoint.Y + 0.2;
+        switch (ViewDirection)
         {
             case 0:
-                hPoint.X = hPoint.X - cos((humm.GetRotation().deg-90) * M_PI/180);
-                hPoint.Z = hPoint.Z+ sin((humm.GetRotation().deg-90) * M_PI/180);
+                hPoint.X = hPoint.X - cos((humm.GetRotation().deg - 90) * M_PI / 180);
+                hPoint.Z = hPoint.Z + sin((humm.GetRotation().deg - 90) * M_PI / 180);
                 c.SetLookAt(hPoint);
                 break;
             case -1:
-                hPoint.X = hPoint.X - sin((humm.GetRotation().deg+90) * M_PI/180);
-                hPoint.Z = hPoint.Z- cos((humm.GetRotation().deg+90) * M_PI/180);
+                hPoint.X = hPoint.X - sin((humm.GetRotation().deg + 90) * M_PI / 180);
+                hPoint.Z = hPoint.Z - cos((humm.GetRotation().deg + 90) * M_PI / 180);
                 c.SetLookAt(hPoint);
                 break;
             case 1:
-                hPoint.X = hPoint.X - sin((humm.GetRotation().deg-90) * M_PI/180);
-                hPoint.Z = hPoint.Z- cos((humm.GetRotation().deg-90) * M_PI/180);
+                hPoint.X = hPoint.X - sin((humm.GetRotation().deg - 90) * M_PI / 180);
+                hPoint.Z = hPoint.Z - cos((humm.GetRotation().deg - 90) * M_PI / 180);
                 c.SetLookAt(hPoint);
                 break;
             default:
@@ -170,7 +170,9 @@ void CallBackRenderScene(void)
     }
     c.LookAt();
 
-
+    gameView.SetPosition(Point2d(0, 0));
+    gameView.SetSize(Point2d(Window_Width, Window_Height));
+    p.aspect = (float)(Window_Width / Window_Height);
     gameView.Draw();
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -190,44 +192,47 @@ void SpecialKey(int key, int x, int y)
         case GLUT_KEY_F7:  OutIn = 3; break;
         case GLUT_KEY_F8:  OutIn = 4; break;
         case GLUT_KEY_F9:  OutIn = 5; break;
-        case GLUT_KEY_F10: OutIn =6; break;
-        case GLUT_KEY_F11: OutIn =7; break;
-        case GLUT_KEY_F12: OutIn =8; break;
+        case GLUT_KEY_F10: OutIn = 6; break;
+        case GLUT_KEY_F11: OutIn = 7; break;
+        case GLUT_KEY_F12: OutIn = 8; break;
     }
 }
 
 void KeyPressed(unsigned char key, int x, int y)
 {
-    if (key == 27)
+    switch (key)
     {
-        printf("Escape key pressed. Exiting...\n");
-        glutDestroyWindow(Window_ID);
-        exit(1);
-    }
-
-    if (controlsEnabled)
-    {
-        switch (key)
-        {
-            case 'w':
-                humm.throttle = true;
-                humm.brake = false;
-                break;
-            case 'a':
-                humm.rotL = true;
-                humm.rotR = false;
-                break;
-            case 's':
-                humm.brake = true;
-                humm.throttle = false;
-                break;
-            case 'd':
-                humm.rotR = true;
-                humm.rotL = false;
-                break;
-            default:
-                printf("Unrecognized key pressed: %d\n", key);
-        }
+        case 'W':
+        case 'w':
+            humm.throttle = true;
+            humm.brake = false;
+            break;
+        case 'A':
+        case 'a':
+            humm.rotL = true;
+            humm.rotR = false;
+            break;
+        case 'S':
+        case 's':
+            humm.brake = true;
+            humm.throttle = false;
+            break;
+        case 'D':
+        case 'd':
+            humm.rotR = true;
+            humm.rotL = false;
+            break;
+        case 'R':
+        case 'r':
+            humm.ResetPos();
+            break;
+        case 27:
+            printf("Escape key pressed. Exiting...\n");
+            glutDestroyWindow(Window_ID);
+            exit(1);
+            break;
+        default:
+            printf("Unrecognized key pressed: %d\n", key);
     }
 }
 
@@ -235,15 +240,19 @@ void KeyReleased(unsigned char key, int x, int y)
 {
     switch (key)
     {
+        case 'W':
         case 'w':
             humm.throttle = false;
             break;
+        case 'A':
         case 'a':
             humm.rotL = false;
             break;
+        case 'S':
         case 's':
             humm.brake = false;
             break;
+        case 'D':
         case 'd':
             humm.rotR = false;
             break;
@@ -254,11 +263,15 @@ void KeyReleased(unsigned char key, int x, int y)
 
 void CallBackResizeScene(int Width, int Height)
 {
+    // Let's not core dump, no matter what.
     if (Height == 0)
         Height = 1;
 
-    gameView.SetPosition(Point2d(0, 0));
-    gameView.SetSize(Point2d(Width, Height));
+    if (Width < Height)
+    {
+        Width = Height;
+        glutReshapeWindow(Width, Height);
+    }
 
     Window_Width = Width;
     Window_Height = Height;
@@ -266,22 +279,22 @@ void CallBackResizeScene(int Width, int Height)
 
 void MouseClick(int button, int state, int x, int y)
 {
-   if (state == GLUT_DOWN)
-      switch (button)
-      {
-      case GLUT_RIGHT_BUTTON:
-         gameView.camera->eye.X = 5;
-         gameView.camera->eye.Y = 5;
-         break;
+    if (state == GLUT_DOWN)
+        switch (button)
+        {
+        case GLUT_RIGHT_BUTTON:
+            gameView.camera->eye.X = 5;
+            gameView.camera->eye.Y = 5;
+            break;
 
-      default:
-         break;
-      }
-   else if (state == GLUT_UP)
-   {
-      gameView.camera->eye.X = 0;
-      gameView.camera->eye.Y = 0;
-   }
+        default:
+            break;
+        }
+    else if (state == GLUT_UP)
+    {
+        gameView.camera->eye.X = 0;
+        gameView.camera->eye.Y = 0;
+    }
 }
 
 void MyInit(int Width, int Height)
@@ -289,14 +302,14 @@ void MyInit(int Width, int Height)
     glEnable(GL_BLEND);
     glClearColor(0.6f, 0.6f, 1.0f, 0.0f);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable (GL_CULL_FACE);
-    glCullFace (GL_BACK);
-    glFrontFace (GL_CCW);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0);
     glDepthFunc(GL_LESS);
     glShadeModel(GL_SMOOTH);
-    CallBackResizeScene(Width,Height);
+    CallBackResizeScene(Width, Height);
 }
 
 void Timer(int id)
@@ -305,21 +318,19 @@ void Timer(int id)
     if (hc.X < -100 || hc.X > 100
         || hc.Z < -100 || hc.Z > 100
         || hc.Y < 0)
-        {
-            controlsEnabled = false;
             humm.Move(Point3d(0,-0.1f,0));
-        }
-        else
-            controlsEnabled = true;
 
     if (hc.Y < -2)
         humm.ResetPos();
 
     if (!paused)
     {
+        for (auto &Buildings : Rotatepieces)
+            Buildings.UpdatePosition();
         humm.UpdatePosition();
         test.Rotate(1);
     }
+
     glutTimerFunc(1, &Timer, 0);
 }
 
@@ -336,39 +347,44 @@ int main(int argc, char **argv)
     printf("\n");
 
     test.Rotate(270);
-   gameView.AddShape(&world);
-   gameView.AddShape(&test);
-   gameView.AddShape(&humm);
+    gameView.AddShape(&world);
+    gameView.AddShape(&test);
+    gameView.AddShape(&humm);
 
-   int worldScaling = 2;
-    for (int x = -100; x < 100; x+=6) {
-        for (int y = -100; y < 100; y+=6){
-            Rect3d* block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75 * worldScaling,0.25,1.75* worldScaling), Color(75,75,75,0));
+    int worldScaling = 2;
+    for (int x = -100; x < 100; x += 6)
+    {
+        for (int z = -100; z < 100; z += 6)
+        {
+            Rect3d *block = new Rect3d(Point3d(x, 0.1, z), Point3d(1.75 * worldScaling, 0.25, 1.75 * worldScaling), Color(75, 75, 75, 0));
             gameView.AddShape(block);
-            Rect3d* middleLine = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, y * worldScaling), Point3d(0.1*worldScaling, 0.25, 0.75 *worldScaling), Color(255,255,255,0));
+            for(int quads =0;quads<3;quads++){
+            Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
+            gameView.AddShape(BlockBuilding);
+            Rotatepieces.push_back(*BlockBuilding);
+            }
+            Rect3d *middleLine = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(middleLine);
             //middleLine->Rotate(45);
             //gameView.AddShape(middleLine);
-            Rect3d* middleLine2 = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, y + (1.5 * worldScaling)), Point3d(0.1*worldScaling, 0.25, 0.75*worldScaling), Color(255, 255, 255, 0));
+            Rect3d *middleLine2 = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z + (1.5 * worldScaling)), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(middleLine2);
-            Rect3d* edgeLine = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 *worldScaling, 0.25, 6.0 * worldScaling), Color(255,255,255,0));
+            Rect3d *edgeLine = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(edgeLine);
-            Rect3d* edgeLine2 = new Rect3d(Point3d(x + (2.0 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255,255,255,0));
+            Rect3d *edgeLine2 = new Rect3d(Point3d(x + (2.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(edgeLine2);
-            Rect3d* middleLine1Rot = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.5 * worldScaling), Color(255,255,255,0));
+            Rect3d *middleLine1Rot = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.5 * worldScaling), Color(255, 255, 255, 0));
             middleLine1Rot->Rotate(90);
             middleLine1Rot->Move(Point3d(3.0, 0.0, 1.0));
             gameView.AddShape(middleLine1Rot);
-            Rect3d* edgeLine1Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255,255,255,0));
+            Rect3d *edgeLine1Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255, 255, 255, 0));
             edgeLine1Rot->Rotate(90);
             edgeLine1Rot->Move(Point3d(4.0, 0.0, 0.0));
             gameView.AddShape(edgeLine1Rot);
-            Rect3d* edgeLine2Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255,255,255,0));
+            Rect3d *edgeLine2Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255, 255, 255, 0));
             edgeLine2Rot->Rotate(90);
             edgeLine2Rot->Move(Point3d(4.0, 0.0, 2.0));
             gameView.AddShape(edgeLine2Rot);
-            Rect3d* testBuilding = new Rect3d(Point3d(x + 0.25, 0.5, y - 0.15), Point3d(0.75, 1.5, 0.6), Color(125,125,0,0.4));
-            gameView.AddShape(testBuilding);
         }
     }
 

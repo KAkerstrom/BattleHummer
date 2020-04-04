@@ -44,6 +44,7 @@
 			<Add directory="C:/MinGW/lib" />
 		</Linker>
 		<Unit filename="BattleHummer.h" />
+		<Unit filename="Buildings.h" />
 		<Unit filename="Object.h" />
 		<Unit filename="Projection.h" />
 		<Unit filename="Shapes.h" />

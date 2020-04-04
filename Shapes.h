@@ -266,7 +266,7 @@ class Rect3d : public Shape
             Point3d tfr( s.X, s.Y, s.Z*_top_ratio);
             Point3d tbl(-s.X, s.Y,-s.Z*_top_ratio);
             Point3d tbr( s.X, s.Y,-s.Z*_top_ratio);
-            
+
             std::vector<Point3d> p;
             p.push_back(bfr);
             p.push_back(bfl);
@@ -391,7 +391,7 @@ class Cylinder : public Shape
             Transform();
 
             glColor4f(cylinderColor.red, cylinderColor.blue, cylinderColor.green, 1 - cylinderColor.alpha);
-            gluCylinder(gluNewQuadric(), radius, radius, height, 50, 50);
+            gluCylinder(gluNewQuadric(), radius, radius, height, 15, 15);
             Circle c1(Point3d(0, 0, 0), radius, endColor);
             Circle c2(Point3d(0, 0, height), radius, endColor);
             c1.Rotate(180);

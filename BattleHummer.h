@@ -21,21 +21,21 @@ class BattleHummer : public Object
         bool rotR, rotL, throttle, brake;
         double moveSp, followDist, fDist = 1.5;
         double rotSp = 2.0f;
-        double maxSpeed = 1.18;
+        double maxSpeed = 0.2;
+        double minSpeed = -0.09;
         double accel = 0.03;
-    
+
         BattleHummer(Point3d _center, float _size = 1.0f) : Object(_center)
         {
             originalCenter = _center;
             followPoint = new Point3d(0, 1.3, 0);
             aheadPoint = new Point3d(0, 1.3, 0);
             moveSp = 0;
-            rotSp = 2.5;
 
             rotR = rotL = throttle = brake = false;
-    
+
             Point3d bodySize(1.5 * _size, 1 * _size, 3 * _size);
-    
+
             // Create rocket launchers
             Color endColor(200, 5, 5);
             Color cylinderColor(100, 5, 5);
@@ -321,36 +321,44 @@ class BattleHummer : public Object
             if(brake)
             {
                 brakeColor = Color(255,0,0);
-                if(moveSp > 0)
-                    moveSp -= accel * 2;
+                if(moveSp > minSpeed)
+                {
+                    moveSp -= accel;
+                }
             }
             else
+            {
                 brakeColor = Color(100,0,0);
+                if(moveSp < 0)
+                    moveSp += accel;
+            }
+                
             
             brake1 -> SetColor(brakeColor);
             brake2 -> SetColor(brakeColor);
 
             if(rotL)
             {
-                Rotate(rotSp);
+                if(brake)
+                    Rotate(-rotSp);
+                else
+                    Rotate(rotSp);
             }
             if(rotR)
             {
-                Rotate(-rotSp);
+                if(brake)
+                    Rotate(rotSp);
+                else
+                    Rotate(-rotSp);
             }
 
-            if(moveSp <= 0)
-                    moveSp = 0;
+            if(moveSp <= minSpeed)
+                    moveSp = minSpeed;
 
             if(moveSp >= maxSpeed)
                     moveSp = maxSpeed;
 
         };
-
-        ~BattleHummer()
-        {
-            delete followPoint;
-        }
 };
 
 #endif
