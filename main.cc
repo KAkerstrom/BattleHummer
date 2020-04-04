@@ -353,75 +353,64 @@ int main(int argc, char **argv)
             Rect3d *block = new Rect3d(Point3d(x, 0.0, z), blockSize, Color(75, 75, 75, 0));
             gameView.AddShape(block);
 
-            // draw road
-            Rect2d* roadLine = new Rect2d
-            (
-                Point3d(x, 0.069f*worldScaling, z),
-                Point2d(blockSize.X*2.0f, blockSize.Z*2.0f),
-                Color(5,5,5)
-            );
-            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine -> Rotate(180);
-            gameView.AddShape(roadLine);
-
-            // draw white outline
-            Rect2d* roadLine1 = new Rect2d
-            (
-                Point3d(x, 0.07f*worldScaling, z),
-                Point2d(blockSize.X*1.2f, blockSize.Z*1.2f),
-                Color(255,255,255)
-            );
-            roadLine1 -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine1 -> Rotate(180);
-            gameView.AddShape(roadLine1);
-
-            // Draw dotted lines
-            Rect2d* roadLine2 = new Rect2d
-            (
-                Point3d(x + 1.5f*worldScaling, 0.07f*worldScaling, z - 0.75f*worldScaling),
-                Point2d(0.1f*worldScaling, 0.6f*worldScaling),
-                Color(255,255,255)
-            );
-            roadLine2 -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine2 -> Rotate(180);
-            gameView.AddShape(roadLine2);
-
-            Rect2d* roadLine3 = new Rect2d
-            (
-                Point3d(x + 1.5f*worldScaling, 0.07f*worldScaling, z + 0.75f*worldScaling),
-                Point2d(0.1f*worldScaling, 0.6f*worldScaling),
-                Color(255,255,255)
-            );
-            roadLine3 -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine3 -> Rotate(180);
-            gameView.AddShape(roadLine3);
-
-            Rect2d* roadLine4 = new Rect2d
-            (
-                Point3d(x - 0.75f*worldScaling, 0.07f*worldScaling, z + 1.5f*worldScaling),
-                Point2d(0.6f*worldScaling, 0.1f*worldScaling),
-                Color(255,255,255)
-            );
-            roadLine4 -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine4 -> Rotate(180);
-            gameView.AddShape(roadLine4);
-
-            Rect2d* roadLine5 = new Rect2d
-            (
-                Point3d(x + 0.75f*worldScaling, 0.07f*worldScaling, z + 1.5f*worldScaling),
-                Point2d(0.6f*worldScaling, 0.1f*worldScaling),
-                Color(255,255,255)
-            );
-            roadLine5 -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine5 -> Rotate(180);
-            gameView.AddShape(roadLine5);
-
             for (int quads = 0;quads < 3; quads++)
             {
                 Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
                 gameView.AddShape(BlockBuilding);
                 Rotatepieces.push_back(*BlockBuilding);
             }
+
+            // draw white outline
+            Rect3d* roadLine1 = new Rect3d
+            (
+                Point3d(x, 0.07f*worldScaling, z),
+                Point3d(blockSize.X*1.2f, 0,blockSize.Z*1.2f),
+                Color(255,255,255)
+            );
+            gameView.AddShape(roadLine1);
+            // draw road
+            Rect3d* roadLine = new Rect3d
+            (
+                Point3d(x, 0.065f*worldScaling, z),
+                Point3d(blockSize.X*2.0f,0 ,blockSize.Z*2.0f),
+                Color(5,5,5)
+            );
+            gameView.AddShape(roadLine);
+
+            // Draw dotted lines
+            Rect3d* roadLine2 = new Rect3d
+            (
+                Point3d(x + 1.5f*worldScaling, 0.07f*worldScaling, z - 0.75f*worldScaling),
+                Point3d(0.1f*worldScaling, 0,0.6f*worldScaling),
+                Color(255,255,255)
+            );
+            gameView.AddShape(roadLine2);
+
+            Rect3d* roadLine3 = new Rect3d
+            (
+                Point3d(x + 1.5f*worldScaling, 0.07f*worldScaling, z + 0.75f*worldScaling),
+                Point3d(0.1f*worldScaling, 0,0.6f*worldScaling),
+                Color(255,255,255)
+            );
+            gameView.AddShape(roadLine3);
+
+            Rect3d* roadLine4 = new Rect3d
+            (
+                Point3d(x - 0.75f*worldScaling, 0.07f*worldScaling, z + 1.5f*worldScaling),
+                Point3d(0.6f*worldScaling,0, 0.1f*worldScaling),
+                Color(255,255,255)
+            );
+            gameView.AddShape(roadLine4);
+
+            Rect3d* roadLine5 = new Rect3d
+            (
+                Point3d(x + 0.75f*worldScaling, 0.07f*worldScaling, z + 1.5f*worldScaling),
+                Point3d(0.6f*worldScaling, 0,0.1f*worldScaling),
+                Color(255,255,255)
+            );
+            gameView.AddShape(roadLine5);
+
+
     }
 
     glutInit(&argc, argv);
