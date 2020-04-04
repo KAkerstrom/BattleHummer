@@ -71,7 +71,7 @@ View gameView(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p, &c);
 //Ortho p1(Point3d(0, 0, 0), Point3d(Window_Width / 50, Window_Height / 50, 500));
 //Rect3d world(Point3d(0, 0, 0), Point3d(200, 0.25, 200), Color(0, 0, 0, 0));
 
-BattleHummer humm(Point3d(-0.25f, 0.5, 1), 0.3f);
+BattleHummer humm(Point3d(-3.0f, 0.5, 1), 0.3f);
 BattleHummer test(Point3d(0, 0.5f, -2.0f), 0.3f);
 
 void CallBackRenderScene(void)
@@ -346,10 +346,10 @@ int main(int argc, char **argv)
     gameView.AddShape(&humm);
 
     int worldScaling = 2;
-    for (int x = -100; x < 100; x += 6)
-        for (int z = -100; z < 100; z += 6)
+    for (int x = -102; x <= 102; x += 6)
+        for (int z = -102; z <= 102; z += 6)
         {
-            Point3d blockSize(1.75f * worldScaling, 0.25f*worldScaling, 1.75f * worldScaling);
+            Point3d blockSize(1.75f * worldScaling, 0.25f * worldScaling, 1.75f * worldScaling);
             Rect3d *block = new Rect3d(Point3d(x, 0.0, z), blockSize, Color(75, 75, 75, 0));
             gameView.AddShape(block);
 

@@ -312,16 +312,29 @@ class BattleHummer : public Object
             antenna -> Rotate(2);
 
             Rotation rot = GetRotation();
-            float z = moveSp * cos(rot.deg * M_PI/180);
-            float x = moveSp * sin(rot.deg * M_PI/180);
+            float deltaX = moveSp * sin(rot.deg * M_PI/180);
+            float deltaZ = moveSp * cos(rot.deg * M_PI/180);
+            float pot_x = center.X - deltaX;
+            float pot_z = center.Z - deltaZ;
+
+            // move to rounded value on collision
+            float blockCtoC = 6.0f;
+            float blockSize = 1.9f;
+            float x_col_dist = abs(pot_x - (blockCtoC * round(pot_x / blockCtoC)));
+            float z_col_dist = abs(pot_z - (blockCtoC * round(pot_z / blockCtoC)));
+            if (x_col_dist <= blockSize && z_col_dist <= blockSize)
+                deltaZ = 0;
+            if (z_col_dist <= blockSize && x_col_dist <= blockSize)
+                deltaX = 0;
+            printf("X:%f\tZ:%f\n", x_col_dist, z_col_dist);
 
             followDist = fDist + (moveSp * 1.6);
 
             followPoint->X = center.X - followDist * cos((-rot.deg - 90) * M_PI/180);
             followPoint->Z = center.Z - followDist * sin((-rot.deg - 90) * M_PI/180);
-            aheadPoint->X =center.X + followDist * cos((-rot.deg - 90) * M_PI/180);
-            aheadPoint->Z = center.Z + followDist * sin((-rot.deg - 90) * M_PI/180);
-            Move(Point3d(-x, 0, -z));
+            aheadPoint->X  = center.X + followDist * cos((-rot.deg - 90) * M_PI/180);
+            aheadPoint->Z  = center.Z + followDist * sin((-rot.deg - 90) * M_PI/180);
+            Move(Point3d(-deltaX, 0, -deltaZ));
             Color brakeColor;
             double adjRotSp = rotSp;
             switch (fr)
