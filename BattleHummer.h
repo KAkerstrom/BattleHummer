@@ -103,7 +103,7 @@ class BattleHummer : public Object
             (
                 Point3d(0.0f, 0.8f*_size, -0.5f*_size),
                 Point3d(bodySize.X*0.9f, 0.8f*bodySize.Y, 0.5*bodySize.Z),
-                Color(0.0f, 0.8f*_size, 0.3f*_size),
+                Color(0.0f, 0.3f, 0.05f),
                 0.5f
             );
             shapes.push_back(cab);
@@ -223,7 +223,7 @@ class BattleHummer : public Object
             );
             shapes.push_back(grillPlate);
 
-            Color barColor(c_yellow, 0);
+            Color barColor(120,50,168);
             for (int i = 0; i < 4; i++)
             {
                 // Create grill bars
@@ -268,12 +268,12 @@ class BattleHummer : public Object
             shapes.push_back(wire);
 
             // Create antenna topper
-            Teapot* teapot = new Teapot(Point3d(0,1*_size,1*_size), 0.2f*_size, Color(0.5f,0.5f,0.5f));
+            Teapot* teapot = new Teapot(Point3d(0,1*_size,1*_size), 0.2f*_size, Color(120,50,168));
             shapes.push_back(teapot);
             antenna = teapot;
 
             // Create body
-            Rect3d *body = new Rect3d(Point3d(0,0,0), bodySize, Color(117, 50, 60));
+            Rect3d *body = new Rect3d(Point3d(0,0,0), bodySize, Color(0.0f, 0.1f, 0.05f));
             shapes.push_back(body);
             
             // Create text
@@ -317,16 +317,13 @@ class BattleHummer : public Object
             float pot_x = center.X - deltaX;
             float pot_z = center.Z - deltaZ;
 
-            // move to rounded value on collision
+            // todo: move to rounded value on collision
             float blockCtoC = 6.0f;
             float blockSize = 1.9f;
             float x_col_dist = abs(pot_x - (blockCtoC * round(pot_x / blockCtoC)));
             float z_col_dist = abs(pot_z - (blockCtoC * round(pot_z / blockCtoC)));
             if (x_col_dist <= blockSize && z_col_dist <= blockSize)
-                deltaZ = 0;
-            if (z_col_dist <= blockSize && x_col_dist <= blockSize)
-                deltaX = 0;
-            printf("X:%f\tZ:%f\n", x_col_dist, z_col_dist);
+                {deltaX = deltaZ = 0;}
 
             followDist = fDist + (moveSp * 1.6);
 
