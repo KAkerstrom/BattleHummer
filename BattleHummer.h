@@ -19,9 +19,9 @@ class BattleHummer : public Object
         bool rotR, rotL, throttle, brake;
         double moveSp, followDist, fDist = 1.5;
         double rotSp = 2.0f;
-        double maxSpeed = 0.18;
+        double maxSpeed = 1.18;
         double accel = 0.03;
-    
+
         BattleHummer(Point3d _center, float _size = 1.0f) : Object(_center)
         {
             followPoint = new Point3d(0, 1.3, 0);
@@ -30,9 +30,9 @@ class BattleHummer : public Object
             rotSp = 2.5;
 
             rotR = rotL = throttle = brake = false;
-    
+
             Point3d bodySize(1.5 * _size, 1 * _size, 3 * _size);
-    
+
             // Create rocket launchers
             Color endColor(200, 5, 5);
             Color cylinderColor(100, 5, 5);
