@@ -416,7 +416,7 @@ int main(int argc, char **argv)
             roadLine -> Rotate(180);
             gameView.AddShape(roadLine);
 
-            for (int quads = 0;quads < 3; quads++){
+            for (int quads = 0;quads < 3; quads++)
             {
                 Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
                 gameView.AddShape(BlockBuilding);
