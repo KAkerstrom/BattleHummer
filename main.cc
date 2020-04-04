@@ -13,6 +13,7 @@
 #include "Shapes.h"
 #include "View.h"
 #include "BattleHummer.h"
+#include "Buildings.h"
 
 #include <GL/gl.h>   // OpenGL itself.
 #include <GL/glu.h>  // GLU support library.
@@ -23,7 +24,7 @@
 int Window_ID;
 int Window_Width = 600;
 int Window_Height = 400;
-
+std::vector<Buildings> Rotatepieces;
 // Cube position and rotation speed variables.
 float X_Rot = 0.0f;
 float Y_Rot = 30.0f;
@@ -335,6 +336,8 @@ void MyInit(int Width, int Height)
 
 void Timer(int id)
 {
+    for (auto &Buildings : Rotatepieces)
+        Buildings.UpdatePosition();
     humm.UpdatePosition();
     test.Rotate(1);
     glutTimerFunc(1, &Timer, 0);
@@ -360,34 +363,37 @@ int main(int argc, char **argv)
     int worldScaling = 2;
     for (int x = -100; x < 100; x += 6)
     {
-        for (int y = -100; y < 100; y += 6)
+        for (int z = -100; z < 100; z += 6)
         {
-            Rect3d *block = new Rect3d(Point3d(x, 0.1, y), Point3d(1.75 * worldScaling, 0.25, 1.75 * worldScaling), Color(75, 75, 75, 0));
+            Rect3d *block = new Rect3d(Point3d(x, 0.1, z), Point3d(1.75 * worldScaling, 0.25, 1.75 * worldScaling), Color(75, 75, 75, 0));
             gameView.AddShape(block);
-            Rect3d *middleLine = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
+            for(int quads =0;quads<3;quads++){
+            Buildings *BlockBuilding = new Buildings(Point3d(x, 0.5, z), Point3d(0.75, 1.5, 0.75),quads);
+            gameView.AddShape(BlockBuilding);
+            Rotatepieces.push_back(*BlockBuilding);
+            }
+            Rect3d *middleLine = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(middleLine);
             //middleLine->Rotate(45);
             //gameView.AddShape(middleLine);
-            Rect3d *middleLine2 = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, y + (1.5 * worldScaling)), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
+            Rect3d *middleLine2 = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z + (1.5 * worldScaling)), Point3d(0.1 * worldScaling, 0.25, 0.75 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(middleLine2);
-            Rect3d *edgeLine = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255, 255, 255, 0));
+            Rect3d *edgeLine = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(edgeLine);
-            Rect3d *edgeLine2 = new Rect3d(Point3d(x + (2.0 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255, 255, 255, 0));
+            Rect3d *edgeLine2 = new Rect3d(Point3d(x + (2.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 6.0 * worldScaling), Color(255, 255, 255, 0));
             gameView.AddShape(edgeLine2);
-            Rect3d *middleLine1Rot = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.5 * worldScaling), Color(255, 255, 255, 0));
+            Rect3d *middleLine1Rot = new Rect3d(Point3d(x + (1.5 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 0.5 * worldScaling), Color(255, 255, 255, 0));
             middleLine1Rot->Rotate(90);
             middleLine1Rot->Move(Point3d(3.0, 0.0, 1.0));
             gameView.AddShape(middleLine1Rot);
-            Rect3d *edgeLine1Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255, 255, 255, 0));
+            Rect3d *edgeLine1Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255, 255, 255, 0));
             edgeLine1Rot->Rotate(90);
             edgeLine1Rot->Move(Point3d(4.0, 0.0, 0.0));
             gameView.AddShape(edgeLine1Rot);
-            Rect3d *edgeLine2Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, y * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255, 255, 255, 0));
+            Rect3d *edgeLine2Rot = new Rect3d(Point3d(x + (1.0 * worldScaling), 0.1, z * worldScaling), Point3d(0.1 * worldScaling, 0.25, 2.0 * worldScaling), Color(255, 255, 255, 0));
             edgeLine2Rot->Rotate(90);
             edgeLine2Rot->Move(Point3d(4.0, 0.0, 2.0));
             gameView.AddShape(edgeLine2Rot);
-            Rect3d *testBuilding = new Rect3d(Point3d(x + 0.25, 0.5, y - 0.15), Point3d(0.75, 1.5, 0.6), Color(125, 125, 0, 0.4));
-            gameView.AddShape(testBuilding);
         }
     }
 
