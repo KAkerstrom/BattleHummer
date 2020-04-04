@@ -20,6 +20,7 @@ class BattleHummer : public Object
         double moveSp, followDist, fDist = 1.5;
         double rotSp = 2.0f;
         double maxSpeed = 1.18;
+        double minSpeed = -0.09;
         double accel = 0.03;
 
         BattleHummer(Point3d _center, float _size = 1.0f) : Object(_center)
@@ -27,7 +28,6 @@ class BattleHummer : public Object
             followPoint = new Point3d(0, 1.3, 0);
             aheadPoint = new Point3d(0, 1.3, 0);
             moveSp = 0;
-            rotSp = 2.5;
 
             rotR = rotL = throttle = brake = false;
 
@@ -303,37 +303,44 @@ class BattleHummer : public Object
             if(brake)
             {
                 brakeColor = Color(255,0,0);
-                if(moveSp > 0)
-                    moveSp -= accel * 2;
+                if(moveSp > minSpeed)
+                {
+                    moveSp -= accel;
+                }
             }
             else
+            {
                 brakeColor = Color(100,0,0);
+                if(moveSp < 0)
+                    moveSp += accel;
+            }
+                
             
             brake1 -> SetColor(brakeColor);
             brake2 -> SetColor(brakeColor);
 
             if(rotL)
             {
-                Rotate(rotSp);
+                if(brake)
+                    Rotate(-rotSp);
+                else
+                    Rotate(rotSp);
             }
             if(rotR)
             {
-                Rotate(-rotSp);
+                if(brake)
+                    Rotate(rotSp);
+                else
+                    Rotate(-rotSp);
             }
 
-            if(moveSp <= 0)
-                    moveSp = 0;
+            if(moveSp <= minSpeed)
+                    moveSp = minSpeed;
 
             if(moveSp >= maxSpeed)
                     moveSp = maxSpeed;
 
         };
-
-        ~BattleHummer()
-        {
-            delete followPoint;
-            delete aheadPoint;
-        }
 };
 
 #endif
