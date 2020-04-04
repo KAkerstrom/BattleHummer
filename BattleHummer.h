@@ -345,6 +345,10 @@ class BattleHummer : public Object
                         moveSp += accel;
                     if(moveSp > 0)
                         moveSp -= accel;
+                    if (moveSp < 0 && moveSp > -accel)
+                        moveSp = 0;
+                    if (moveSp > 0 && moveSp < accel)
+                        moveSp = 0;
 
                     adjRotSp = rotSp;
                     break;
