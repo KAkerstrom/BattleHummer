@@ -327,6 +327,7 @@ class BattleHummer : public Object
             switch (fr)
             {
                 case forward:
+                    brakeColor = Color(100,0,0);
                     if(moveSp < maxSpeed)
                         moveSp += accel;
 
@@ -349,6 +350,7 @@ class BattleHummer : public Object
                     adjRotSp = rotSp;
                     break;
                 default:
+                    brakeColor = Color(255,255,0);
                     // ¯\_(ツ)_/¯
                     break;
             }
@@ -364,6 +366,7 @@ class BattleHummer : public Object
                 case neutral:
                     break;
                 default:
+                    brakeColor = Color(255,255,0);
                     // ¯\_(ツ)_/¯
                     break;
             }
