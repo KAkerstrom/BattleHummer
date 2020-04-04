@@ -50,7 +50,7 @@ class Buildings : public Object
 
                     Rect3d *top = new Rect3d(Point3d(B_X,0.6,B_Z), Point3d(0.62,0.4,0.62), Color(125, 15, 40, 0.4));
                     shapes.push_back(top);
-                    Cylinder *foundation = new Cylinder(Point3d(B_X,0.4,B_Z),0.9f,0.3f,Color(125,75,15,0.6),Color(125,75,15,0.6));
+                    Cylinder *foundation = new Cylinder(Point3d(B_X,0.5,B_Z),0.9f,0.3f,Color(125,75,15,0.6),Color(125,75,15,0.6));
                     foundation -> SetRotation(Rotation(Point3d(1,0,0), 0));
                     foundation -> Rotate(90);
                     shapes.push_back(foundation);
@@ -59,7 +59,7 @@ class Buildings : public Object
                 case 2:
                    {
 
-                    Cylinder *top = new Cylinder(Point3d(B_X+0.4,0.7,B_Z),0.01f,0.25f,Color(125,75,15,0.6),Color(125,75,15,0.6));
+                    Cylinder *top = new Cylinder(Point3d(B_X+0.4,0.7,B_Z),0.01f,0.2f,Color(125,75,15,0.6),Color(125,75,15,0.6));
                     top -> SetRotation(Rotation(Point3d(1,1,0), 0));
                     top -> Rotate(45);
                     shapes.push_back(top);
