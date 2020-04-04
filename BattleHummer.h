@@ -332,6 +332,7 @@ class BattleHummer : public Object
         ~BattleHummer()
         {
             delete followPoint;
+            delete aheadPoint;
         }
 };
 
