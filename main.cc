@@ -355,11 +355,11 @@ int main(int argc, char **argv)
     printf("\tDevon Kuss\n");
     printf("\n");
 
-    test.Rotate(90);
+    test.Rotate(270);
    gameView.AddShape(&world);
    gameView.AddShape(&test);
    gameView.AddShape(&humm);
-   
+
    int worldScaling = 2;
     for (int x = -100; x < 100; x+=6) {
         for (int y = -100; y < 100; y+=6){
