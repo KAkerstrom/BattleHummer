@@ -365,56 +365,56 @@ int main(int argc, char **argv)
             gameView.AddShape(roadLine);
 
             // draw white outline
-            roadLine = new Rect2d
+            Rect2d* roadLine1 = new Rect2d
             (
                 Point3d(x, 0.07f*worldScaling, z),
                 Point2d(blockSize.X*1.2f, blockSize.Z*1.2f),
                 Color(255,255,255)
             );
-            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine -> Rotate(180);
-            gameView.AddShape(roadLine);
+            roadLine1 -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine1 -> Rotate(180);
+            gameView.AddShape(roadLine1);
 
             // Draw dotted lines
-            roadLine = new Rect2d
+            Rect2d* roadLine2 = new Rect2d
             (
                 Point3d(x + 1.5f*worldScaling, 0.07f*worldScaling, z - 0.75f*worldScaling),
                 Point2d(0.1f*worldScaling, 0.6f*worldScaling),
                 Color(255,255,255)
             );
-            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine -> Rotate(180);
-            gameView.AddShape(roadLine);
+            roadLine2 -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine2 -> Rotate(180);
+            gameView.AddShape(roadLine2);
 
-            roadLine = new Rect2d
+            Rect2d* roadLine3 = new Rect2d
             (
                 Point3d(x + 1.5f*worldScaling, 0.07f*worldScaling, z + 0.75f*worldScaling),
                 Point2d(0.1f*worldScaling, 0.6f*worldScaling),
                 Color(255,255,255)
             );
-            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine -> Rotate(180);
-            gameView.AddShape(roadLine);
+            roadLine3 -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine3 -> Rotate(180);
+            gameView.AddShape(roadLine3);
 
-            roadLine = new Rect2d
+            Rect2d* roadLine4 = new Rect2d
             (
                 Point3d(x - 0.75f*worldScaling, 0.07f*worldScaling, z + 1.5f*worldScaling),
                 Point2d(0.6f*worldScaling, 0.1f*worldScaling),
                 Color(255,255,255)
             );
-            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine -> Rotate(180);
-            gameView.AddShape(roadLine);
+            roadLine4 -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine4 -> Rotate(180);
+            gameView.AddShape(roadLine4);
 
-            roadLine = new Rect2d
+            Rect2d* roadLine5 = new Rect2d
             (
                 Point3d(x + 0.75f*worldScaling, 0.07f*worldScaling, z + 1.5f*worldScaling),
                 Point2d(0.6f*worldScaling, 0.1f*worldScaling),
                 Color(255,255,255)
             );
-            roadLine -> SetRotation(Rotation(Point3d(1,0,0), 0));
-            roadLine -> Rotate(180);
-            gameView.AddShape(roadLine);
+            roadLine5 -> SetRotation(Rotation(Point3d(1,0,0), 0));
+            roadLine5 -> Rotate(180);
+            gameView.AddShape(roadLine5);
 
             for (int quads = 0;quads < 3; quads++)
             {
