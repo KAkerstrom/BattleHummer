@@ -201,20 +201,20 @@ void KeyPressed(unsigned char key, int x, int y)
 {
     switch (key)
     {
-        case 'W':
-        case 'w':
-            humm.Drive(forward);
-            break;
         case 'A':
         case 'a':
+            humm.Drive(forward);
+            break;
+        case 'Q':
+        case 'q':
             humm.Steer(left);
             break;
-        case 'S':
-        case 's':
+        case 'Z':
+        case 'z':
             humm.Drive(reverse);
             break;
-        case 'D':
-        case 'd':
+        case 'W':
+        case 'w':
             humm.Steer(right);
             break;
         case 'R':
