@@ -72,7 +72,7 @@ View gameView(Point2d(Window_Width * 0.1, 0), Point2d(1, 1), &p, &c);
 //Rect3d world(Point3d(0, 0, 0), Point3d(200, 0.25, 200), Color(0, 0, 0, 0));
 
 BattleHummer humm(Point3d(-3.0f, 0.5, 1), 0.3f);
-BattleHummer test(Point3d(0, 0.5f, -2.0f), 0.3f);
+//BattleHummer test(Point3d(0, 0.5f, -2.0f), 0.3f);
 
 void CallBackRenderScene(void)
 {
@@ -239,16 +239,16 @@ void KeyReleased(unsigned char key, int x, int y)
 {
     switch (key)
     {
-        case 'S':
-        case 's':
-        case 'W':
-        case 'w':
-            humm.Drive(neutral);
-            break;
         case 'A':
         case 'a':
-        case 'D':
-        case 'd':
+        case 'Z':
+        case 'z':
+            humm.Drive(neutral);
+            break;
+        case 'Q':
+        case 'q':
+        case 'W':
+        case 'w':
             humm.Steer(straight);
             break;
         default:
@@ -323,7 +323,7 @@ void Timer(int id)
         for (auto &Buildings : Rotatepieces)
             Buildings.UpdatePosition();
         humm.UpdatePosition();
-        test.Rotate(1);
+        //test.Rotate(1);
     }
 
     glutTimerFunc(1, &Timer, 0);
@@ -341,8 +341,8 @@ int main(int argc, char **argv)
     printf("\tDevon Kuss\n");
     printf("\n");
 
-    test.Rotate(270);
-    gameView.AddShape(&test);
+    //test.Rotate(270);
+    //gameView.AddShape(&test);
     gameView.AddShape(&humm);
 
     int worldScaling = 2;
