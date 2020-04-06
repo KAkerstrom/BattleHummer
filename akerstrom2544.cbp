@@ -8,7 +8,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/BattleHummer" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/akerstrom2544" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="C:/MinGW/bin" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
@@ -18,7 +18,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/BattleHummer" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/akerstrom2544" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="C:/MinGW/bin" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
