@@ -182,9 +182,9 @@ void SpecialKey(int key, int x, int y)
 {
     switch(key)
     {
-        case GLUT_KEY_F1:  ViewDirection =  0; break;
-        case GLUT_KEY_F2:  ViewDirection =  1; break;
-        case GLUT_KEY_F3:  ViewDirection = -1; break;
+        case GLUT_KEY_F1:  OutIn=ViewDirection =  0; break;
+        case GLUT_KEY_F2:  ViewDirection =  1;OutIn=0; break;
+        case GLUT_KEY_F3:  ViewDirection = -1; OutIn=0;break;
         case GLUT_KEY_F4:  OutIn = ViewDirection = 0; break;
         case GLUT_KEY_F5:  OutIn = ViewDirection = 1; break;
         case GLUT_KEY_F6:  OutIn = 2; break;
